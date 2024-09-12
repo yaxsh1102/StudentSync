@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Home from "../components/Home";
+import Profile from "./Profile";
 
 const LandingPage = lazy(() => import("./LandingPage"));
 const Footer = lazy(() => import("../components/Footer"));
@@ -36,6 +37,15 @@ export const appRouter = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <Home />
+          </Suspense>
+        ),
+      },
+
+      {
+        path: "/profile",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Profile />
           </Suspense>
         ),
       },
