@@ -1,12 +1,17 @@
-import Navbar from '../components/Navbar'; // Assuming you have Navbar
+import Navbar from '../components/Navbar';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
 
 const DormitoryDetails = () => {
+  const { showToast } = useContext(AppContext); // Access the showToast function from context
+
   const dormitory = {
     name: 'Sunshine Dormitory',
     address: '123 Sunshine Street, Gandhinagar, Gujarat',
     capacity: '100 Students',
     price: '₹5,000/month per person',
-    description: 'Sunshine Dormitory offers a comfortable and affordable living space for students. Located in the heart of Gandhinagar, the dormitory is within close proximity to major colleges and universities. Amenities include free Wi-Fi, a shared kitchen, study rooms, and recreational areas. It is the perfect place for students to focus on their studies while also enjoying a vibrant community life.',
+    description:
+      'Sunshine Dormitory offers a comfortable and affordable living space for students. Located in the heart of Gandhinagar, the dormitory is within close proximity to major colleges and universities. Amenities include free Wi-Fi, a shared kitchen, study rooms, and recreational areas. It is the perfect place for students to focus on their studies while also enjoying a vibrant community life.',
     images: [
       'https://th.bing.com/th/id/OIP.L4wLfL2NIpyVHd1kfRjF-wHaE8?rs=1&pid=ImgDetMain',
     ],
@@ -14,6 +19,11 @@ const DormitoryDetails = () => {
       name: 'Mr. Yash Patel',
       phone: '+91 98765 43210',
     },
+  };
+
+  // Function to handle the click event and show toast
+  const handleAddressClick = () => {
+    showToast(`Address: ${dormitory.address}`, 'info');
   };
 
   return (
@@ -39,7 +49,9 @@ const DormitoryDetails = () => {
 
           <div className='mt-4 md:mt-6'>
             <p className='text-base md:text-lg'>
-              <span className='font-semibold text-yellow-400'>Address:</span> {dormitory.address}
+              <span className='font-semibold text-yellow-400 cursor-pointer' onClick={handleAddressClick}>
+                Address:
+              </span> {dormitory.address}
             </p>
             <p className='text-base md:text-lg'>
               <span className='font-semibold text-yellow-400'>Capacity:</span> {dormitory.capacity}
@@ -62,7 +74,7 @@ const DormitoryDetails = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DormitoryDetails
+export default DormitoryDetails;
