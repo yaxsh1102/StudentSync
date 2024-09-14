@@ -9,12 +9,12 @@ const Profile = () => {
     state: "California",
     contactNumber: "+1 (555) 123-4567",
     email: "alex.johnson@example.com",
-    picture: "https://via.placeholder.com/150" ,
-    area:"Uajal" ,
+    picture: "https://via.placeholder.com/150",
+    area: "Uajal",
   };
 
   return (
-    <div className="bg-gradient-to-br from-teal-100 to-purple-100 min-h-screen flex items-center justify-center p-6">
+    <div id="profile" className="bg-gradient-to-br from-teal-100 to-purple-100 min-h-screen flex items-center justify-center p-6">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-md w-full">
         <div className="bg-gradient-to-r from-teal-500 to-purple-600 p-6 text-white">
           <div className="flex flex-col items-center">
@@ -34,7 +34,10 @@ const Profile = () => {
             <InfoItem label="Area" value={profileData.area} />
             <InfoItem label="City" value={profileData.city} />
             <InfoItem label="State" value={profileData.state} />
-            <InfoItem label="Contact Number" value={profileData.contactNumber} />
+            <InfoItem
+              label="Contact Number"
+              value={profileData.contactNumber}
+            />
           </div>
         </div>
       </div>

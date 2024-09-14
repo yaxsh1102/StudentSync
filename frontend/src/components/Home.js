@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Explore from './Explore';
+import React, { useState } from "react";
+import Explore from "./Explore";
 
 const Home = () => {
   const [open, setOpen] = useState(true);
@@ -30,7 +30,9 @@ const Home = () => {
           <img
             src="logo.png"
             alt=""
-            className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"}`}
+            className={`cursor-pointer duration-500 ${
+              open && "rotate-[360deg]"
+            }`}
           />
           <h1
             className={`text-black origin-left font-medium text-xl duration-200 ${
@@ -55,12 +57,16 @@ const Home = () => {
         </ul>
       </div>
 
-      <div className={`min-h-screen pl-20 transition-all duration-300 ${open ? 'blur-sm' : ''}`}>
+      <div
+        className={`min-h-screen pl-20 transition-all duration-300 ${
+          open ? "blur-sm" : ""
+        }`}
+      >
         <Explore />
       </div>
 
       {open && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-10"
           onClick={() => setOpen(false)}
         ></div>
