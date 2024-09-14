@@ -29,7 +29,7 @@ const EditProfile = () => {
   return (
     <div id="edit-profile" className="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen flex items-center justify-center p-6">
       <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full">
-        <div className="bg-gradient-to-r from-gray-500 to-gray-400 p-6 text-white">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-400 p-6 text-white">
           <h2 className="text-3xl font-extrabold">Edit Profile</h2>
         </div>
         <div className="p-6">
@@ -88,7 +88,7 @@ const EditProfile = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-2 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors duration-200 ease-in-out"
+              className="w-full py-2 bg-blue-500 text-slate-900 font-bold rounded-lg hover:bg-blue-400 transition-colors duration-200 ease-in-out"
             >
               Save Changes
             </button>
