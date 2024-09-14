@@ -67,6 +67,14 @@ export const appRouter = createBrowserRouter([
         ),
       },
       {
+        path: "/editprofile",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <EditProfile />
+          </Suspense>
+        ),
+      },
+      {
         path: "/login",
         element: (
           <Suspense fallback={<Loading />}>
