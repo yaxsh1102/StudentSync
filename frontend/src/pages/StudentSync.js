@@ -5,11 +5,11 @@ import Sidebar from "../components/Sidebar"; // Make sure to import Sidebar
 import LandingPage from "./LandingPage";
 import Footer from "../components/Footer";
 import Loading from "../components/Loading"
+import EditProfile from "../components/EditProfile";
 
 const ErrorPage = lazy(() => import("./ErrorPage"));
 const Login = lazy(() => import("./Login"));
 const Profile = lazy(() => import("../components/Profile"));
-const EditProfile = lazy(() => import("../components/EditProfile"));
 const Signup = lazy(() => import("./Signup"));
 const Rooms = lazy(() => import("./Rooms"));
 const DormitoryPage = lazy(() => import("./DormitoryPage"));
@@ -66,7 +66,7 @@ export const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "/editprofile",
+        path: "/edit-profile",
         element: (
           <Suspense fallback={<Loading />}>
             <EditProfile />
@@ -115,8 +115,10 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "/chat",
+        path: "/chat",
         element: (
           <Suspense fallback={<Loading />}>
+            <Chat />
             <Chat />
           </Suspense>
         ),
