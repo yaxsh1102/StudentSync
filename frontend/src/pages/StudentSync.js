@@ -116,7 +116,6 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "/chat",
-        path: "/chat",
         element: (
           <Suspense fallback={<Loading />}>
             <Chat />
