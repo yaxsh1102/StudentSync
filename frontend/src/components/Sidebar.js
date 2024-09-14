@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Sidebar = ({ open, setOpen }) => {
-  const navigate = useNavigate(); 
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
   const Menus = [
-    { title: "Events", src: "calendar", path: "/events" }, 
+    { title: "Events", src: "calendar", path: "/events" },
     { title: "Communities", src: "chat", path: "/communities" },
     { title: "Dormitory", src: "home", path: "/dormitory" },
     { title: "Flatmate", src: "magnifier", path: "/rooms" },
@@ -12,8 +14,8 @@ const Sidebar = ({ open, setOpen }) => {
   ];
 
   const handleNavigation = (path) => {
-    navigate(path); 
-    setOpen(false); 
+    navigate(path);
+    setOpen(false);
   };
 
   return (
@@ -21,7 +23,7 @@ const Sidebar = ({ open, setOpen }) => {
       <div
         className={`fixed top-0 left-0 h-full bg-gray-800 p-5 pt-8 transition-all duration-300 border-r border-gray-700 ${
           open ? "w-60" : "w-20"
-        } z-20`}
+        } z-30`}
       >
         <img
           src="control.png"
@@ -50,7 +52,7 @@ const Sidebar = ({ open, setOpen }) => {
             <li
               key={index}
               className="flex rounded-md p-2 cursor-pointer hover:bg-gray-800 hover:text-yellow-400 text-white text-sm items-center gap-x-4"
-              onClick={() => handleNavigation(Menu.path)} 
+              onClick={() => handleNavigation(Menu.path)}
             >
               <img src={`${Menu.src}.png`} alt={Menu.title} className="w-5 my-2" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>
@@ -63,8 +65,8 @@ const Sidebar = ({ open, setOpen }) => {
 
       {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10"
-          onClick={() => setOpen(false)} 
+          className="fixed inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm z-20"
+          onClick={() => setOpen(false)}
         ></div>
       )}
     </>
