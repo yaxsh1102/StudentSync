@@ -8,7 +8,8 @@ import Loading from "../components/Loading"
 
 const ErrorPage = lazy(() => import("./ErrorPage"));
 const Login = lazy(() => import("./Login"));
-const Profile = lazy(() => import("./Profile"));
+const Profile = lazy(() => import("../components/Profile"));
+const EditProfile = lazy(() => import("../components/EditProfile"));
 const Signup = lazy(() => import("./Signup"));
 const Rooms = lazy(() => import("./Rooms"));
 const DormitoryPage = lazy(() => import("./DormitoryPage"));
@@ -53,6 +54,14 @@ export const appRouter = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <Profile />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/editprofile",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <EditProfile />
           </Suspense>
         ),
       },
