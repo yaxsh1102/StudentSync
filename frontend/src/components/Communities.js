@@ -1,61 +1,130 @@
 import React, { useState } from "react";
-import { Search, Plus, Home, Edit, Trash2 } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import DormitoryCard from "../components/DormitoryCard";
+import { Link, useNavigate } from "react-router-dom";
+
+const participants = [
+  { name: "John Doe", email: "john@example.com", avatar: "/path/to/avatar1.jpg" },
+  { name: "Jane Smith", email: "jane@example.com", avatar: "/path/to/avatar2.jpg" },
+  // Add more participants
+];
 
 const Communities = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
-    
+    name: "",
+    desc: "",
+    image: "",
+    social_links: [],
+    messages: [],
   });
   const [photoPreview, setPhotoPreview] = useState("");
 
-  const userOwnedDormitories = [
+  const userJoinedCommunities = [
     {
       id: 1,
-      name: "My Sunshine Hall",
-      address: "123 Campus Drive",
-      capacity: 200,
-      description: "A bright and sunny hall.",
+      name: "Tech Innovators",
+      desc: "Link community for discussing technology innovations.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/techinnovators",
+        facebook: "https://facebook.com/techinnovators",
+      },
+      user_id: [1, 2, 3],
+      messages: [
+        { user: "Alice", content: "Hey, how's everyone doing?" },
+        { user: "Bob", content: "Doing great! Excited for the next meetup." },
+      ],
     },
     {
       id: 2,
-      name: "My Moonlight Dorm",
-      address: "456 University Ave",
-      capacity: 150,
-      description: "A cozy dorm under the moonlight.",
+      name: "Art Lovers",
+      desc: "Link place to share and discuss art pieces.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/artlovers",
+        instagram: "https://instagram.com/artlovers",
+      },
+      user_id: [4, 5, 6],
+      messages: [
+        { user: "Eve", content: "Check out this new artwork I just made!" },
+        { user: "Dave", content: "Wow, that's beautiful!" },
+      ],
     },
   ];
 
-  const otherDormitories = [
+  const userCreatedCommunities = [
     {
-      id: 3,
-      name: "Starlight Residence",
-      address: "789 College Blvd",
-      capacity: 180,
-      description: "A residence with starlit views.",
+      id: 1,
+      name: "Tech Innovators",
+      desc: "Link community for discussing technology innovations.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/techinnovators",
+        facebook: "https://facebook.com/techinnovators",
+      },
+      user_id: [1, 2, 3],
+      messages: [
+        { user: "Alice", content: "Hey, how's everyone doing?" },
+        { user: "Bob", content: "Doing great! Excited for the next meetup." },
+      ],
     },
     {
-      id: 4,
-      name: "Pine View Dorm",
-      address: "101 Forest Lane",
-      capacity: 120,
-      description: "A peaceful dorm with a pine view.",
-    },
-    {
-      id: 5,
-      name: "Riverside Hall",
-      address: "202 River Road",
-      capacity: 160,
-      description: "A hall by the riverside.",
+      id: 2,
+      name: "Art Lovers",
+      desc: "Link place to share and discuss art pieces.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/artlovers",
+        instagram: "https://instagram.com/artlovers",
+      },
+      user_id: [4, 5, 6],
+      messages: [
+        { user: "Eve", content: "Check out this new artwork I just made!" },
+        { user: "Dave", content: "Wow, that's beautiful!" },
+      ],
     },
   ];
 
-  const filterDormitories = (dormitories) =>
-    dormitories.filter((dorm) =>
-      dorm.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const allCommunities = [
+    {
+      id: 1,
+      name: "Tech Innovators",
+      desc: "Link community for discussing technology innovations.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/techinnovators",
+        facebook: "https://facebook.com/techinnovators",
+      },
+      user_id: [1, 2, 3],
+      messages: [
+        { user: "Alice", content: "Hey, how's everyone doing?" },
+        { user: "Bob", content: "Doing great! Excited for the next meetup." },
+      ],
+    },
+    {
+      id: 2,
+      name: "Art Lovers",
+      desc: "Link place to share and discuss art pieces.",
+      image: "https://via.placeholder.com/150",
+      social_links: {
+        twitter: "https://twitter.com/artlovers",
+        instagram: "https://instagram.com/artlovers",
+      },
+      user_id: [4, 5, 6],
+      messages: [
+        { user: "Eve", content: "Check out this new artwork I just made!" },
+        { user: "Dave", content: "Wow, that's beautiful!" },
+      ],
+    },
+  ];
+
+  const filterCommunities = (communities) =>
+    communities.filter((community) =>
+      community.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleInputChange = (e) => {
@@ -72,26 +141,26 @@ const Communities = () => {
     }
   };
 
-  const handleAddDormitory = () => {
-    const { name, address, capacity, description, dormPhotos } = formValues;
+  const handleCreateCommunity = () => {
+    const { name, desc, image, social_links, messages } = formValues;
 
-    if (name && address && capacity && description && dormPhotos.length === 1) {
-      const newDormitory = {
+    if (name && desc && image && social_links && messages === 1) {
+      const newCommunity = {
         id: Date.now(),
         name,
-        address,
-        capacity: Number(capacity),
-        description,
-        dormPhotos,
+        desc,
+        image,
+        social_links,
+        messages,
       };
-      console.log("New dormitory added:", newDormitory);
+      console.log("New community added:", newCommunity);
       setShowForm(false);
       setFormValues({
         name: "",
-        address: "",
-        capacity: "",
-        description: "",
-        dormPhotos: [],
+        desc: "",
+        image: "",
+        social_links: [],
+        messages: [],
       });
       setPhotoPreview("");
     } else {
@@ -100,22 +169,22 @@ const Communities = () => {
   };
 
   const handleEdit = (id) => {
-    console.log(`Edit dormitory with id: ${id}`);
+    console.log(`Edit community with id: ${id}`);
   };
 
   const handleDelete = (id) => {
-    console.log(`Delete dormitory with id: ${id}`);
+    console.log(`Delete community with id: ${id}`);
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen flex flex-col pl-24">
-      <div className="bg-gray-900 pt-4 flex justify-between items-center px-4 ">
-        <h1 className="text-2xl font-bold text-white">Dormitory Manager</h1>
+    <div className="bg-gray-900 min-h-screen flex flex-col pl-24 px-8">
+      <div className="bg-gray-900 pt-4 flex justify-between items-center px-8">
+        <h1 className="text-2xl font-bold text-white">Communities</h1>
         <div className="flex items-center space-x-4">
           <div className="relative flex-grow">
             <input
               type="text"
-              placeholder="Search dormitories..."
+              placeholder="Search communities..."
               className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4 pl-10 focus:outline-none focus:border-yellow-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -130,16 +199,16 @@ const Communities = () => {
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg flex items-center transition-colors duration-300"
           >
             <Plus size={20} className="mr-2" />
-            Add Dormitory
+            Create Community
           </button>
         </div>
       </div>
 
       {showForm && (
-        <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6 w-[100%] mx-auto z-10">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-md m-6 w-[100%] z-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-white">
-              Add a New Dormitory
+              Make Link New Community
             </h2>
             <button
               onClick={() => setShowForm(false)}
@@ -161,36 +230,14 @@ const Communities = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Address</label>
-              <input
-                type="text"
-                name="address"
-                className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.address}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-white">Capacity</label>
-              <input
-                type="number"
-                name="capacity"
-                className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.capacity}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-white">Description</label>{" "}
-              {/* Added description field */}
+              <label className="block text-white">Description</label>
               <textarea
-                name="description"
+                type="text"
+                name="desc"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.description}
+                value={formValues.desc}
                 onChange={handleInputChange}
-                rows="3"
+                rows={3}
                 required
               />
             </div>
@@ -215,33 +262,164 @@ const Communities = () => {
                 )}
               </div>
             </div>
+            <div>
+              <label className="block text-white">Social Links</label>{" "}
+              <input
+                name="social_links"
+                className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
+                value={formValues.social_links}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
             <button
               type="button"
-              onClick={handleAddDormitory}
+              onClick={handleCreateCommunity}
               className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg w-full"
             >
-              Add Dormitory
+              Create Community
             </button>
           </form>
         </div>
       )}
 
-      <div className="flex-grow p-4 pt-8">
-        <h2 className="text-xl font-bold text-white mb-4">Your Dormitories</h2>
-        {filterDormitories(userOwnedDormitories).map((dorm) => (
-          <DormitoryCard
-            key={dorm.id}
-            {...dorm}
-            isOwned={true}
-            onEdit={() => handleEdit(dorm.id)}
-            onDelete={() => handleDelete(dorm.id)}
-          />
-        ))}
+      <div className="space-y-24 p-8 my-10">
+        {/* My Communities */}
+        <div>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">
+            My Communities
+          </h2>
+          <div className="space-y-6">
+            {filterCommunities(userCreatedCommunities).map((community) => (
+              <div
+                key={community.id}
+                onClick={() => navigate("/chat")}
+                className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
+              >
+                <img
+                  src={community.image}
+                  alt={community.name}
+                  className="w-16 h-16 rounded-full mr-4"
+                />
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {community.name}
+                  </h3>
+                  <p className="text-gray-400">{community.desc}</p>
+                  <div className="mt-2 space-x-2">
+                  <Link
+                      to={community.social_links.discord}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Discord
+                    </Link>
+                    <Link
+                      to={community.social_links.twitter}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Twitter
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <h2 className="text-xl font-bold text-white mb-4">Other Dormitories</h2>
-        {filterDormitories(otherDormitories).map((dorm) => (
-          <DormitoryCard key={dorm.id} {...dorm} isOwned={false} />
-        ))}
+        {/* Joined Communities */}
+        <div>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">
+            Joined Communities
+          </h2>
+          <div className="space-y-6">
+            {filterCommunities(userJoinedCommunities).map((community) => (
+              <div
+                key={community.id}
+                onClick={() => navigate("/chat")}
+                className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
+              >
+                <img
+                  src={community.image}
+                  alt={community.name}
+                  className="w-16 h-16 rounded-full mr-4"
+                />
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {community.name}
+                  </h3>
+                  <p className="text-gray-400">{community.desc}</p>
+                  <div className="mt-2 space-x-2">
+                  <Link
+                      to={community.social_links.discord}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Discord
+                    </Link>
+                    <Link
+                      to={community.social_links.twitter}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Twitter
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">
+            All Communities
+          </h2>
+          <div className="space-y-6">
+            {filterCommunities(allCommunities).map((community) => (
+              <div
+                key={community.id}
+                onClick={() => navigate("/community")}
+                className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
+              >
+                <img
+                  src={community.image}
+                  alt={community.name}
+                  className="w-16 h-16 rounded-full mr-4"
+                />
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {community.name}
+                  </h3>
+                  <p className="text-gray-400">{community.desc}</p>
+                  <div className="mt-2 space-x-2">
+                    <Link
+                      to={community.social_links.discord}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Discord
+                    </Link>
+                    <Link
+                      to={community.social_links.twitter}
+                      className="text-yellow-400 hover:text-yellow-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Twitter
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
