@@ -1,36 +1,64 @@
-import React, { useState } from 'react';
-import { Search, Plus, Home, Edit, Trash2 } from 'lucide-react';
+import React, { useState } from "react";
+import { Search, Plus, Home, Edit, Trash2 } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
-import { IoClose } from 'react-icons/io5'; 
-import DormitoryCard from '../components/DormitoryCard';
-
-
+import { IoClose } from "react-icons/io5";
+import DormitoryCard from "../components/DormitoryCard";
 
 const DormitoryPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
-    name: '',
-    address: '',
-    capacity: '',
-    description: '', 
+    name: "",
+    address: "",
+    capacity: "",
+    description: "",
     dormPhotos: [],
   });
-  const [photoPreview, setPhotoPreview] = useState('');
+  const [photoPreview, setPhotoPreview] = useState("");
 
   const userOwnedDormitories = [
-    { id: 1, name: "My Sunshine Hall", address: "123 Campus Drive", capacity: 200, description: "A bright and sunny hall." },
-    { id: 2, name: "My Moonlight Dorm", address: "456 University Ave", capacity: 150, description: "A cozy dorm under the moonlight." },
+    {
+      id: 1,
+      name: "My Sunshine Hall",
+      address: "123 Campus Drive",
+      capacity: 200,
+      description: "A bright and sunny hall.",
+    },
+    {
+      id: 2,
+      name: "My Moonlight Dorm",
+      address: "456 University Ave",
+      capacity: 150,
+      description: "A cozy dorm under the moonlight.",
+    },
   ];
 
   const otherDormitories = [
-    { id: 3, name: "Starlight Residence", address: "789 College Blvd", capacity: 180, description: "A residence with starlit views." },
-    { id: 4, name: "Pine View Dorm", address: "101 Forest Lane", capacity: 120, description: "A peaceful dorm with a pine view." },
-    { id: 5, name: "Riverside Hall", address: "202 River Road", capacity: 160, description: "A hall by the riverside." },
+    {
+      id: 3,
+      name: "Starlight Residence",
+      address: "789 College Blvd",
+      capacity: 180,
+      description: "A residence with starlit views.",
+    },
+    {
+      id: 4,
+      name: "Pine View Dorm",
+      address: "101 Forest Lane",
+      capacity: 120,
+      description: "A peaceful dorm with a pine view.",
+    },
+    {
+      id: 5,
+      name: "Riverside Hall",
+      address: "202 River Road",
+      capacity: 160,
+      description: "A hall by the riverside.",
+    },
   ];
 
   const filterDormitories = (dormitories) =>
-    dormitories.filter(dorm =>
+    dormitories.filter((dorm) =>
       dorm.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -53,7 +81,7 @@ const DormitoryPage = () => {
 
     if (name && address && capacity && description && dormPhotos.length === 1) {
       const newDormitory = {
-        id: Date.now(), 
+        id: Date.now(),
         name,
         address,
         capacity: Number(capacity),
@@ -62,10 +90,16 @@ const DormitoryPage = () => {
       };
       console.log("New dormitory added:", newDormitory);
       setShowForm(false);
-      setFormValues({ name: '', address: '', capacity: '', description: '', dormPhotos: [] });
-      setPhotoPreview('');
+      setFormValues({
+        name: "",
+        address: "",
+        capacity: "",
+        description: "",
+        dormPhotos: [],
+      });
+      setPhotoPreview("");
     } else {
-      alert('Please fill all fields and upload one photo.');
+      alert("Please fill all fields and upload one photo.");
     }
   };
 
@@ -90,7 +124,10 @@ const DormitoryPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={20}
+            />
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
@@ -102,11 +139,16 @@ const DormitoryPage = () => {
         </div>
       </div>
 
-\      {showForm && (
+      {showForm && (
         <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6 w-[100%] mx-auto z-10">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Add a New Dormitory</h2>
-            <button onClick={() => setShowForm(false)} className="text-red-400 hover:text-red-300">
+            <h2 className="text-xl font-semibold text-white">
+              Add a New Dormitory
+            </h2>
+            <button
+              onClick={() => setShowForm(false)}
+              className="text-red-400 hover:text-red-300"
+            >
               <IoClose size={24} />
             </button>
           </div>
@@ -145,7 +187,8 @@ const DormitoryPage = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Description</label> {/* Added description field */}
+              <label className="block text-white">Description</label>{" "}
+              {/* Added description field */}
               <textarea
                 name="description"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
@@ -187,7 +230,7 @@ const DormitoryPage = () => {
         </div>
       )}
 
-      <div className="flex-grow p-4 pt-8"> 
+      <div className="flex-grow p-4 pt-8">
         <h2 className="text-xl font-bold text-white mb-4">Your Dormitories</h2>
         {filterDormitories(userOwnedDormitories).map((dorm) => (
           <DormitoryCard
@@ -201,11 +244,7 @@ const DormitoryPage = () => {
 
         <h2 className="text-xl font-bold text-white mb-4">Other Dormitories</h2>
         {filterDormitories(otherDormitories).map((dorm) => (
-          <DormitoryCard
-            key={dorm.id}
-            {...dorm}
-            isOwned={false}
-          />
+          <DormitoryCard key={dorm.id} {...dorm} isOwned={false} />
         ))}
       </div>
     </div>
