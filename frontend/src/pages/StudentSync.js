@@ -5,17 +5,17 @@ import Sidebar from "../components/Sidebar"; // Make sure to import Sidebar
 import LandingPage from "./LandingPage";
 import Footer from "../components/Footer";
 import Loading from "../components/Loading"
+import EditProfile from "../components/EditProfile";
 
 const ErrorPage = lazy(() => import("./ErrorPage"));
 const Login = lazy(() => import("./Login"));
 const Profile = lazy(() => import("../components/Profile"));
-const EditProfile = lazy(() => import("../components/EditProfile"));
 const Signup = lazy(() => import("./Signup"));
 const Rooms = lazy(() => import("./Rooms"));
 const DormitoryPage = lazy(() => import("./DormitoryPage"));
 const DormitoryDetails = lazy(() => import("./DormitoryDetails"));
 const Communities = lazy(() => import("../components/Communities"));
-const CommunityChatPage = lazy(() => import("../components/CommunityChatPage"));
+const Chat = lazy(() => import("../components/Chat"));
 const Events = lazy(() => import("./Events"));
 const EventDetails = lazy(() => import("./EventDetails"));
 const RoomDetails = lazy(() => import("./RoomDetails"));
@@ -58,7 +58,15 @@ export const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "/editprofile",
+        path: "/edit-profile",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <EditProfile />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/edit-profile",
         element: (
           <Suspense fallback={<Loading />}>
             <EditProfile />
@@ -106,10 +114,10 @@ export const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "/community",
+        path: "/chat",
         element: (
           <Suspense fallback={<Loading />}>
-            <CommunityChatPage />
+            <Chat />
           </Suspense>
         ),
       },
