@@ -115,7 +115,7 @@ const Signup = () => {
             required
             placeholder="Enter your full name"
             className="w-full px-3 py-2 mt-1 text-black outline-none bg-gray-700 border border-gray-600 rounded-md focus:ring focus:ring-yellow-400 focus:border-yellow-400"
-            ref={(el) => (inputRefs.current['full-name'] = el)}
+            ref={(el) => (inputRefs.current["full-name"] = el)}
           />
         </div>
         <div className="mt-4">
@@ -129,11 +129,14 @@ const Signup = () => {
             required
             placeholder="Enter your email"
             className="w-full px-3 py-2 mt-1 text-black outline-none bg-gray-700 border border-gray-600 rounded-md focus:ring focus:ring-yellow-400 focus:border-yellow-400"
-            ref={(el) => (inputRefs.current['email'] = el)}
+            ref={(el) => (inputRefs.current["email"] = el)}
           />
         </div>
         <div className="mt-4">
-          <label htmlFor="contact-number" className="block text-sm font-medium text-yellow-400">
+          <label
+            htmlFor="contact-number"
+            className="block text-sm font-medium text-yellow-400"
+          >
             Contact Number
           </label>
           <input
@@ -143,7 +146,7 @@ const Signup = () => {
             required
             placeholder="Enter your contact number"
             className="w-full px-3 py-2 mt-1 text-black outline-none bg-gray-700 border border-gray-600 rounded-md focus:ring focus:ring-yellow-400 focus:border-yellow-400"
-            ref={(el) => (inputRefs.current['contact-number'] = el)}
+            ref={(el) => (inputRefs.current["contact-number"] = el)}
           />
         </div>
         <div className="mt-4">
@@ -205,7 +208,7 @@ const Signup = () => {
         </div>
         <div className="mt-6 text-center text-yellow-400">
           <p>
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link to="/login" className=" hover:text-yellow-500">
               Login here
             </Link>

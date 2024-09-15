@@ -1,26 +1,39 @@
-import React, { useState } from 'react';
-import { Search, Plus, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Search, Plus, X } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
-import RoomCard from '../components/RoomCard';
-
-
+import RoomCard from "../components/RoomCard";
 
 const Rooms = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [userRoom, setUserRoom] = useState(null); 
-  const [showForm, setShowForm] = useState(false); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userRoom, setUserRoom] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
-    buildingName: '',
-    personsRequired: '',
-    roomDetails: '',
+    buildingName: "",
+    personsRequired: "",
+    roomDetails: "",
     roomPhotos: [],
   });
-  const [photoPreview, setPhotoPreview] = useState(''); 
+  const [photoPreview, setPhotoPreview] = useState("");
 
   const availableRooms = [
-    { id: 1, buildingName: 'Sunrise Tower', personsRequired: 2, address: '123 Main St' },
-    { id: 2, buildingName: 'Maple Apartments', personsRequired: 1, address: '456 Maple St' },
-    { id: 3, buildingName: 'Oceanview Heights', personsRequired: 3, address: '789 Ocean Ave' },
+    {
+      id: 1,
+      buildingName: "Sunrise Tower",
+      personsRequired: 2,
+      address: "123 Main St",
+    },
+    {
+      id: 2,
+      buildingName: "Maple Apartments",
+      personsRequired: 1,
+      address: "456 Maple St",
+    },
+    {
+      id: 3,
+      buildingName: "Oceanview Heights",
+      personsRequired: 3,
+      address: "789 Ocean Ave",
+    },
   ];
 
   const filterRooms = (rooms) =>
@@ -30,41 +43,52 @@ const Rooms = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({...formValues, [name]: value });
+    setFormValues({ ...formValues, [name]: value });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setFormValues({...formValues, roomPhotos: [file] });
+      setFormValues({ ...formValues, roomPhotos: [file] });
       setPhotoPreview(preview);
     }
   };
 
   const handleAddRoom = () => {
-    const { buildingName, personsRequired, roomDetails, roomPhotos } = formValues;
+    const { buildingName, personsRequired, roomDetails, roomPhotos } =
+      formValues;
 
-    if (buildingName && personsRequired && roomDetails && roomPhotos.length === 1) {
+    if (
+      buildingName &&
+      personsRequired &&
+      roomDetails &&
+      roomPhotos.length === 1
+    ) {
       const newRoom = {
-        id: Date.now(), 
+        id: Date.now(),
         buildingName,
         personsRequired: Number(personsRequired),
         roomDetails,
         roomPhotos,
-        address: 'Address not provided', 
+        address: "Address not provided",
       };
       setUserRoom(newRoom);
-      setShowForm(false); 
-      setFormValues({ buildingName: '', personsRequired: '', roomDetails: '', roomPhotos: [] });
-      setPhotoPreview(''); 
+      setShowForm(false);
+      setFormValues({
+        buildingName: "",
+        personsRequired: "",
+        roomDetails: "",
+        roomPhotos: [],
+      });
+      setPhotoPreview("");
     } else {
-      alert('Please fill all fields and upload one photo.');
+      alert("Please fill all fields and upload one photo.");
     }
   };
 
   const handleDeleteRoom = () => {
-    setUserRoom(null); 
+    setUserRoom(null);
   };
 
   return (
@@ -81,7 +105,10 @@ const Rooms = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={20}
+            />
           </div>
           {!userRoom && (
             <button
@@ -99,10 +126,15 @@ const Rooms = () => {
         <div className="grid grid-cols-1 gap-8 mt-6">
           {showForm && (
             <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6 relative">
-              <button onClick={() => setShowForm(false)} className="absolute top-4 right-4 text-white hover:text-red-400 transition-colors duration-300">
+              <button
+                onClick={() => setShowForm(false)}
+                className="absolute top-4 right-4 text-white hover:text-red-400 transition-colors duration-300"
+              >
                 <X size={24} />
               </button>
-              <h2 className="text-xl font-semibold text-white mb-4">Add a New Room</h2>
+              <h2 className="text-xl font-semibold text-white mb-4">
+                Add a New Room
+              </h2>
               <form className="space-y-4">
                 <div>
                   <label className="block text-white">Building Name</label>
@@ -126,7 +158,7 @@ const Rooms = () => {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-white">Room Details</label>
                   <textarea
@@ -172,7 +204,9 @@ const Rooms = () => {
           )}
 
           <div>
-            <h2 className="text-2xl font-semibold text-white mb-4">Your Room</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">
+              Your Room
+            </h2>
             {userRoom ? (
               <RoomCard
                 buildingName={userRoom.buildingName}
@@ -182,12 +216,16 @@ const Rooms = () => {
                 isOwned={true}
               />
             ) : (
-              <p className="text-gray-400 text-center mt-4">You haven't added a room yet.</p>
+              <p className="text-gray-400 text-center mt-4">
+                You haven't added a room yet.
+              </p>
             )}
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold text-white mb-4">Available Rooms</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">
+              Available Rooms
+            </h2>
             {filterRooms(availableRooms).length > 0 ? (
               filterRooms(availableRooms).map((room) => (
                 <RoomCard
@@ -195,7 +233,7 @@ const Rooms = () => {
                   buildingName={room.buildingName}
                   personsRequired={room.personsRequired}
                   address={room.address}
-                  onDelete={() => console.log('Room deleted')}
+                  onDelete={() => console.log("Room deleted")}
                   isOwned={false}
                 />
               ))

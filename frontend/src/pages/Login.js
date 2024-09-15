@@ -7,7 +7,7 @@ import axios from 'axios';
 const Login = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -80,7 +80,10 @@ const Login = () => {
           <p>{error}</p>
         </div>
         <div>
-          <label htmlFor="email-or-phone" className="block text-sm font-medium text-yellow-400">
+          <label
+            htmlFor="email-or-phone"
+            className="block text-sm font-medium text-yellow-400"
+          >
             Email or Phone Number
           </label>
           <input
@@ -89,12 +92,15 @@ const Login = () => {
             type="text"
             required
             placeholder="Enter your email or phone number"
-            ref={(el) => (inputRefs.current['email'] = el)}
+            ref={(el) => (inputRefs.current["email"] = el)}
             className="w-full px-3 py-2 mt-1 text-yellow-400 outline-none bg-gray-700 border border-gray-500 rounded-md hover:border-yellow-400 focus:border-yellow-400 focus:ring focus:ring-yellow-400"
           />
         </div>
         <div className="mt-4">
-          <label htmlFor="password" className="block text-sm font-medium text-yellow-400">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-yellow-400"
+          >
             Password
           </label>
           <input
@@ -103,11 +109,16 @@ const Login = () => {
             type="password"
             required
             placeholder="Enter your password"
-            ref={(el) => { inputRefs.current['password'] = el; }}
+            ref={(el) => {
+              inputRefs.current["password"] = el;
+            }}
             className="w-full px-3 py-2 mt-1 text-yellow-400 outline-none bg-gray-700 border border-gray-500 rounded-md hover:border-yellow-400 focus:border-yellow-400 focus:ring focus:ring-yellow-400"
           />
           <div className="mt-2 text-sm text-left">
-            <Link to="/forgot-password" className="text-yellow-400 hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-yellow-400 hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
@@ -142,7 +153,7 @@ const Login = () => {
         </div>
         <div className="mt-6 text-center text-yellow-400">
           <p>
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <Link to="/signup" className=" hover:underline">
               Create Account
             </Link>
