@@ -16,7 +16,6 @@ const DormitoryPage = lazy(() => import("./DormitoryPage"));
 const DormitoryDetails = lazy(() => import("./DormitoryDetails"));
 const Communities = lazy(() => import("../components/Communities"));
 const Chat = lazy(() => import("../components/Chat"));
-const Chat = lazy(() => import("../components/Chat"));
 const Events = lazy(() => import("./Events"));
 const EventDetails = lazy(() => import("./EventDetails"));
 const RoomDetails = lazy(() => import("./RoomDetails"));
