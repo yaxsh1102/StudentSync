@@ -210,7 +210,7 @@ const Events = () => {
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col pl-24 px-8">
       <div className="bg-gray-900 pt-4 flex justify-between items-center px-8">
-        <h1 className="text-2xl font-bold text-white">Event Manager</h1>
+        <h1 className="text-2xl font-bold text-white">Events</h1>
         <div className="flex items-center space-x-4">
           <div className="relative flex-grow">
             <input

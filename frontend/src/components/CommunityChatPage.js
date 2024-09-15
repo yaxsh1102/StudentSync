@@ -93,39 +93,7 @@ const CommunityChatPage = () => {
         </div>
       </div>
 
-      <div className="flex-grow mt-6">
-        <h2 className="text-xl font-bold text-white mb-4">Messages</h2>
-        <div className="bg-gray-800 p-4 rounded-lg overflow-y-auto h-96">
-          {community.messages.length > 0 ? (
-            community.messages.map((message, index) => (
-              <div key={index} className="mb-2">
-                <span className="text-yellow-400">{message.user}: </span>
-                <span className="text-white">{message.content}</span>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-400">
-              No messages yet. Start the conversation!
-            </p>
-          )}
-        </div>
-
-        <div className="mt-4">
-          <input
-            type="text"
-            placeholder="Type Link message..."
-            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:border-yellow-400"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg mt-2 w-full"
-          >
-            Send
-          </button>
-        </div>
-      </div>
+      
     </div>
   );
 };
