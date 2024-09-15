@@ -1,50 +1,112 @@
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import axios from 'axios'
+
 
 const Signup = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const emailPattern = '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$';
+  const emailRegex = new RegExp(emailPattern);
 
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-   
-  };
 
-  const handleGoogleLoginError = () => {
-    console.log('Login Failed');
-  };
-
-  const checkParams = () => {
-    const fullName = inputRefs.current['full-name'].value;
+  const handleGetOtp =async()=>{
     const email = inputRefs.current['email'].value;
-    const contactNumber = inputRefs.current['contact-number'].value;
-    const password = inputRefs.current['password'].value;
-
-    if (!fullName || !email || !contactNumber || !password) {
-      setError('All fields are required');
-      return null;
+    const isValidEmail = (email) => emailRegex.test(email);   
+    
+    if(isValidEmail){
+      try{
+        await axios.post('http://localhost:8000/api/v1/getotp/',{"email":email})
+        setError("Otp sent successfully to "+email)
+      }
+      catch(err){
+        console.log(err)
+        setError("Error while sending Otp")
+      }
     }
+    else{
+      setError("Please enter a valid Email ")
+    }
+}
 
-    return { fullName, email, contactNumber, password };
+  const handleSignup = async () => {
+  
+    try {
+      const fullName = inputRefs.current['full-name'].value;
+      const email = inputRefs.current['email'].value;
+      const contactNumber = inputRefs.current['contact-number'].value || null;
+      const password = inputRefs.current['password'].value;
+      const otp = inputRefs.current['otp'].value;
+
+      if (!fullName || !email || !password  || !otp) {
+        setError('Please fill all the fields');
+        return
+      }
+
+      const response = await axios.post('http://localhost:8000/api/v1/signup/', {
+        name:fullName,
+        email:email,
+        phone:contactNumber,
+        password:password,
+        otp:otp,
+      });
+
+      if (response.data.status===200){
+        localStorage.setItem('jwt',response.data.jwt_token)
+        navigate('/login');
+      }
+      console.log(response.data);
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setError(error.response.data.message); 
+      } else {
+        setError('An unexpected error occurred.'+error);
+      }
+    }
   };
 
-  const submitHandler = async () => {
-    const data = checkParams();
 
-    if (!data) return;
+  const handleGoogleAuth = async (googleUser) => {
+    try {
+      const token = googleUser.credential;
+      const response = await axios.post('http://localhost:8000/api/v1/google-auth/', {
+        token: token
+      });
+
+      // dispatch(setLogin(true));
+      // dispatch(setUserInfo({
+      //   email: response.data.email,
+      //   name: response.data.name,
+      // }));
+      if (response.data.status===200){
+        localStorage.setItem('jwt',response.data.jwt_token)
+        navigate('/home');
+      }
+
+    } catch (error) {
+      console.log(error)
+      if (error.response && error.response.data) {
+        setError(error.response.data.error || 'An error occurred.');
+      } else {
+        setError('An unexpected error occurred.'+error);
+      }
+    }
   };
+
+
 
   return (
-    <div className="flex items-center justify-center min-h-screen py-10 bg-gray-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold text-center text-yellow-400">Sign Up</h2>
+    <div className="flex items-center justify-center min-h-screen py-6 bg-gray-900">
+      <div className="w-full max-w-md p-8  bg-gray-800 rounded-lg shadow-md">
+        <h2 className="text-3xl font-bold text-center text-yellow-400 mb-2">Sign Up</h2>
         <div className="text-center text-red-500">
           <p>{error}</p>
         </div>
         <div>
           <label htmlFor="full-name" className="block text-sm font-medium text-yellow-400">
-            Full Name
+            Full Name <sup className='text-red-500 text-base'>*</sup>
           </label>
           <input
             id="full-name"
@@ -58,7 +120,7 @@ const Signup = () => {
         </div>
         <div className="mt-4">
           <label htmlFor="email" className="block text-sm font-medium text-yellow-400">
-            Email
+            Email <sup className='text-red-500 text-base'>*</sup>
           </label>
           <input
             id="email"
@@ -86,7 +148,7 @@ const Signup = () => {
         </div>
         <div className="mt-4">
           <label htmlFor="password" className="block text-sm font-medium text-yellow-400">
-            Password
+            Password <sup className='text-red-500 text-base'>*</sup>
           </label>
           <input
             id="password"
@@ -98,10 +160,28 @@ const Signup = () => {
             ref={(el) => (inputRefs.current['password'] = el)}
           />
         </div>
+        <div className="mt-4 grid grid-cols-3 gap-2 items-center">
+          <button
+            onClick={handleGetOtp}
+            type="button"
+            className="col-span-1 px-4 py-2 font-bold text-white outline-none bg-[#4e4b48] border-gray-300 rounded-md hover:bg-gray-900 focus:ring focus:ring-indigo-400"
+          >
+            Get OTP <sup className='text-red-500 text-base'>*</sup>
+          </button>
+          <input
+            id="otp"
+            name="otp"
+            type="text"
+            required
+            placeholder="Enter OTP"
+            className="col-span-2 px-3 py-2 text-black outline-none bg-[#4e4b48] border border-gray-500 rounded-md focus:ring focus:ring-indigo-400 focus:border-indigo-400"
+            ref={(el) => (inputRefs.current['otp'] = el)}
+          />
+        </div>
         <div>
           <button
-            className="w-full px-4 py-2 mt-6 font-bold text-black bg-yellow-400 rounded-md hover:bg-yellow-500 focus:ring focus:ring-yellow-400"
-            onClick={submitHandler}
+            className="w-full px-4 py-2 mt-2 font-bold text-black bg-yellow-400 rounded-md hover:bg-yellow-500 focus:ring focus:ring-yellow-400"
+            onClick={handleSignup}
           >
             Sign Up
           </button>
@@ -113,6 +193,15 @@ const Signup = () => {
           <div className="relative flex justify-center text-sm">
             <span className="px-2 text-yellow-400">OR</span>
           </div>
+        </div>
+        <div className='w-full flex justify-center items-center'>
+          <GoogleOAuthProvider clientId='1074917906223-pf2simq4kkr0itiue7f7ofb9t6bbikfq.apps.googleusercontent.com'>
+            <GoogleLogin
+              onSuccess={handleGoogleAuth}
+              onFailure={(error) => setError('Google Sign-In failed')}
+              useOneTap
+            />
+          </GoogleOAuthProvider>
         </div>
         <div className="mt-6 text-center text-yellow-400">
           <p>

@@ -1,41 +1,82 @@
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+
 
 const Login = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
-  function loginHandler() {
-    const email = inputRefs.current['email'].value;
-    const password = inputRefs.current['password'].value;
+  const handleLogin = async () => {
+    try {
 
-    if (!email || !password) {
-      setError('All Fields Are Required');
-      return;
+      const email = inputRefs.current['email'].value;
+      const password = inputRefs.current['password'].value;
+
+      if (!email || !password) {
+        setError('All Fields Are Required');
+        return;
+      }
+
+      const response = await axios.post('http://localhost:8000/api/v1/login/', {
+        cred:email,
+        password: password,
+      });
+      
+      if (response.data.status===200){
+        // dispatch(setLogin(true))
+        // dispatch(setUserInfo({'email':response.data.user.email,'name':response.data.user.name}))
+        localStorage.setItem('jwt',response.data.jwt)
+        // dispatch(sendToast("Welcome , "+response.data.user.name))
+        navigate('/home');
+      }
+      else{
+        setError("Some Error Occured while Logging IN")
+      }
+      console.log(response.data);
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setError(error.response.data.message); 
+      } else {
+        setError('An unexpected error occurred.');
+      }
     }
-    setError('');
-    login(email, password);
-  }
-
-  async function login(email, password) {
-    // Implement login logic
-  }
-
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-    // Implement Google login success logic
   };
 
-  const handleGoogleLoginError = () => {
-    console.log('Login Failed');
+  const handleGoogleAuth = async (googleUser) => {
+    try {
+      const token = googleUser.credential;
+      const response = await axios.post('http://localhost:8000/api/v1/google-auth/', {
+        token: token
+      });
+
+      // dispatch(setLogin(true));
+      // dispatch(setUserInfo({
+      //   email: response.data.email,
+      //   name: response.data.name,
+      // }));
+      if (response.data.status===200){
+        localStorage.setItem('jwt',response.data.jwt_token)
+        navigate('/home');
+      }
+
+    } catch (error) {
+      console.log(error)
+      if (error.response && error.response.data) {
+        setError(error.response.data.error || 'An error occurred.');
+      } else {
+        setError('An unexpected error occurred.'+error);
+      }
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-md">
         <h2 className="text-3xl font-bold text-center text-yellow-400">Login</h2>
-        <div className="text-center text-yellow-500">
+        <div className="text-center text-red-500">
           <p>{error}</p>
         </div>
         <div>
@@ -75,7 +116,7 @@ const Login = () => {
           <button
             type="submit"
             className="w-full px-4 py-2 mt-4 font-bold text-white bg-[#234459] rounded-md hover:bg-[#2d5771] focus:ring focus:ring-yellow-400"
-            onClick={loginHandler}
+            onClick={handleLogin}
           >
             Login
           </button>
@@ -89,16 +130,15 @@ const Login = () => {
           </div>
         </div>
         <div className="w-full flex justify-center items-center">
-          {/* <GoogleLogin
-            render={renderProps => (
-              <button onClick={renderProps.onClick} style={{
-                width: '100%',
-                backgroundColor: '#4285F4'
-              }}>Login with Google</button>
-            )}
-            onSuccess={handleGoogleLoginSuccess}
-            onError={handleGoogleLoginError}
-          /> */}
+        </div>
+        <div className='w-full flex justify-center items-center'>
+          <GoogleOAuthProvider clientId='1074917906223-pf2simq4kkr0itiue7f7ofb9t6bbikfq.apps.googleusercontent.com'>
+            <GoogleLogin
+              onSuccess={handleGoogleAuth}
+              onFailure={(error) => setError('Google Sign-In failed')}
+              useOneTap
+            />
+          </GoogleOAuthProvider>
         </div>
         <div className="mt-6 text-center text-yellow-400">
           <p>

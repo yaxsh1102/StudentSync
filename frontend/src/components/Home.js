@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Explore from './Explore';
 
 const Home = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Events", src: "calendar" },
     { title: "Communities", src: "chat" },
