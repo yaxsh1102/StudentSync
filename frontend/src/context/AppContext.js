@@ -5,9 +5,10 @@ export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
   const [user, setUser] = useState();
-  const [loggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentRoom, setCurrentRoom] = useState();
   const [currentDormitory, setCurrentDormitory] = useState();
+  const [events,setEvents] = useState({})
 
   const showToast = (message, type = "success") => {
     const baseStyle = {
@@ -53,13 +54,15 @@ export default function AppContextProvider({ children }) {
   const value = {
     user,
     setUser,
-    loggedIn,
+    isLoggedIn,
     setIsLoggedIn,
     currentRoom,
     setCurrentRoom,
     currentDormitory,
     setCurrentDormitory,
     showToast, 
+    events,
+    setEvents
   };
 
   return (

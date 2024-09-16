@@ -1,11 +1,14 @@
-import React, { lazy, Suspense } from "react";
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import React, { lazy, Suspense, useContext } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate ,Outlet} from "react-router-dom";
 import Home from "../components/Home";
-import Sidebar from "../components/Sidebar"; // Make sure to import Sidebar
+import Sidebar from "../components/Sidebar";
 import LandingPage from "./LandingPage";
 import Footer from "../components/Footer";
-import Loading from "../components/Loading"
+import Loading from "../components/Loading";
 import EditProfile from "../components/EditProfile";
+import { Toaster } from "react-hot-toast"; 
+import useGetUser from "../hooks/useGetUser";
+import { AppContext } from "../context/AppContext";
 
 const ErrorPage = lazy(() => import("./ErrorPage"));
 const Login = lazy(() => import("./Login"));
@@ -20,143 +23,57 @@ const Events = lazy(() => import("./Events"));
 const EventDetails = lazy(() => import("./EventDetails"));
 const RoomDetails = lazy(() => import("./RoomDetails"));
 
-const StudentSync = () => {
+const Layout = () => {
   return (
-    <div className="flex flex-col">
+    <>
       <Sidebar />
       <div className="flex-1">
         <Outlet />
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 
-export const appRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <StudentSync />,
-    children: [
-      {
-        path: "/",
-        element: <LandingPage />,
-      },
-      {
-        path: "/home",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Home />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/profile",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Profile />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/edit-profile",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <EditProfile />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/editprofile",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <EditProfile />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/login",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Login />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/signup",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Signup />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/events",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Events />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/eventDetails",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <EventDetails />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/communities",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Communities />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/chat",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Chat />
-            <Chat />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/rooms",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Rooms />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/dormitory",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <DormitoryPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/dormitoryDetails",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <DormitoryDetails />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/roomDetails",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <RoomDetails />
-          </Suspense>
-        ),
-      },
-    ],
-    errorElement: <ErrorPage />,
-  },
-]);
+
+const StudentSync = () => {
+
+  useGetUser();
+  const {isLoggedIn} = useContext(AppContext)
+
+  return (
+    <>
+      <Router>
+        <Routes>
+          {isLoggedIn ? (
+            <>
+              <Route path="/" element={<Layout />}>
+                <Route path="" element={<LandingPage />} />
+                <Route path="home" element={<Suspense fallback={<Loading />}><Home /></Suspense>} />
+                <Route path="profile" element={<Suspense fallback={<Loading />}><Profile /></Suspense>} />
+                <Route path="edit-profile" element={<Suspense fallback={<Loading />}><EditProfile /></Suspense>} />
+                <Route path="events" element={<Suspense fallback={<Loading />}><Events /></Suspense>} />
+                <Route path="eventDetails/:param" element={<Suspense fallback={<Loading />}><EventDetails /></Suspense>} />
+                <Route path="communities" element={<Suspense fallback={<Loading />}><Communities /></Suspense>} />
+                <Route path="chat" element={<Suspense fallback={<Loading />}><Chat /></Suspense>} />
+                <Route path="rooms" element={<Suspense fallback={<Loading />}><Rooms /></Suspense>} />
+                <Route path="dormitory" element={<Suspense fallback={<Loading />}><DormitoryPage /></Suspense>} />
+                <Route path="dormitoryDetails" element={<Suspense fallback={<Loading />}><DormitoryDetails /></Suspense>} />
+                <Route path="roomDetails" element={<Suspense fallback={<Loading />}><RoomDetails /></Suspense>} />
+              </Route>
+              {/* <Route path="*" element={<Navigate to="/" />} /> */}
+            </>
+          ) : (
+            <>
+              <Route path="/login" element={<Suspense fallback={<Loading />}><Login /></Suspense>} />
+              <Route path="/signup" element={<Suspense fallback={<Loading />}><Signup /></Suspense>} />
+              {/* <Route path="*" element={<Navigate to="/login" />} /> */}
+            </>
+          )}
+        </Routes>
+      </Router>
+    </>
+  );
+};
 
 export default StudentSync;

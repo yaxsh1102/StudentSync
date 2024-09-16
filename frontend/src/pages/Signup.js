@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
+import useGetUser from '../hooks/useGetUser';
 
 
 const Signup = () => {
@@ -54,7 +55,7 @@ const Signup = () => {
       });
 
       if (response.data.status===200){
-        localStorage.setItem('jwt',response.data.jwt_token)
+        localStorage.setItem('jwt',response.data.jwt)
         navigate('/login');
       }
       console.log(response.data);
@@ -81,8 +82,9 @@ const Signup = () => {
       //   name: response.data.name,
       // }));
       if (response.data.status===200){
-        localStorage.setItem('jwt',response.data.jwt_token)
-        navigate('/home');
+        localStorage.setItem('jwt',response.data.jwt)
+        
+        navigate('/');
       }
 
     } catch (error) {

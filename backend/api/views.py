@@ -9,11 +9,12 @@ from .models import *
 from .sendmail import sendMail
 import random
 from django.utils import timezone  
-from datetime import timedelta  
+from datetime import timedelta ,date
 import jwt  
 from django.conf import settings 
 from django.core.files.storage import default_storage
 import json
+from rest_framework.parsers import MultiPartParser, FormParser
 
 def create_jwt(email):
     payload = {
@@ -46,8 +47,7 @@ class GoogleAuthView(APIView):
             if not email:
                 return Response({'error': 'Email is missing from token'}, status=status.HTTP_400_BAD_REQUEST)
             
-            jwt_token=create_jwt(user_info)
-            
+            jwt_token=create_jwt(email)
             user, created = User.objects.get_or_create(email=email, defaults={'name': name})
             user.save()
 
@@ -147,7 +147,7 @@ class LoginView(APIView):
                             'message': 'Invalid password'
                         },status=status.HTTP_406_NOT_ACCEPTABLE)
                     else:
-                        jwt=create_jwt({'email':email})
+                        jwt=create_jwt(email=email)
                         return Response({
                             'status': 200,
                             'jwt':jwt,
@@ -176,3 +176,116 @@ class LoginView(APIView):
                 'status': 400,
                 'message':errMsg[0]
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+class GetUserDataView(APIView):
+    permission_classes =[AllowAny]
+    
+    def post(self,request):
+        try:
+            user = User.objects.get(email=request.data.get('email'))
+            ser = UserSerializer(user)
+            
+            return Response({
+                'status':200,
+                'user':ser.data
+            },status=status.HTTP_200_OK)
+        except:
+            return Response({
+                'status':404,
+            },status=status.HTTP_404_NOT_FOUND)
+            
+class EventView(APIView):
+    # parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self,request):
+        email = request.data.get('email')
+        events = Event.objects.all()
+        today = date.today()
+        userEvents,upcoming,live,past=[],[],[],[]
+        
+        user=User.objects.get(email=email)
+        allUserEvents=Event.objects.filter(event_handler=user)
+        
+        for i in allUserEvents:
+            eventSer = EventSerializer(i)
+            userEvents+=eventSer.data,
+
+        for i in events :
+            eventSer = EventSerializer(i)
+            
+            if i.date > today:
+                upcoming+=eventSer.data,
+            elif i.date < today:
+                past+=eventSer.data,
+            else:
+                live+=eventSer.data,
+                
+        print(userEvents)
+        
+        return Response({
+            'status':200,
+            'userEvents':userEvents,
+            'upcoming':upcoming,
+            'live':live,
+            'past':past
+        },status=status.HTTP_200_OK)
+    
+class CreateEventView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request):
+        print(request.data)
+
+        # Extract email and image from the request
+        email = request.data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+            
+            ser = EventSerializer(data=request.data)
+            
+            if ser.is_valid():
+                ser.save(event_handler=user)
+                return Response({
+                    'status': 200,
+                    'message': "Event Created Successfully"
+                }, status=status.HTTP_201_CREATED)
+            else:
+                err = ser.errors  
+                print(err)
+                return Response({
+                    'status': 400,
+                    'message': err
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except User.DoesNotExist:
+            # Handle case where no user is found
+            return Response({
+                'status': 404,
+                'message': 'No user found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+class GetEventDetail(APIView):
+    permission_classes=[AllowAny]
+    
+    def post(self,request):
+        id = request.data.get('id')
+        event = Event.objects.get(id=id)
+        eventSer = EventSerializer(event)
+        print(id)
+        print(event)
+        return Response({
+            'status':200,
+            'event':eventSer.data
+        },status=status.HTTP_200_OK)
+    
+
+
+
+
+
+
+
+            
+            
+        
+            

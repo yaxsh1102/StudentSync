@@ -1,99 +1,128 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-import { Search, Plus, Home, Edit, Trash2 } from "lucide-react";
+import { Search, Plus, Home, Edit, Trash2Icon } from "lucide-react";
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
+import axios from 'axios'
 
-const eventsData = {
-  userEvents: [
-    {
-      id: 1,
-      title: "Indigenous Hackathon By DAIICT",
-      image:
-        "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-      type: "Hackathon",
-      date: "21/09/2024",
-      time: "9:00 AM - 6:00 PM",
-      venue:
-        "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-      desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-      organizer: "DAIICT Student Council",
-      capacity: 200,
-      registrationDeadline: "15/09/2024",
-      prizes: [
-        "1st Place: ₹50,000 and Internship Opportunities",
-        "2nd Place: ₹30,000 and Mentorship Program",
-        "3rd Place: ₹20,000 and Tech Gadgets",
-      ],
-      sponsors: [
-        "TechCorp India",
-        "InnovateNow Foundation",
-        "Gujarat Innovation Society",
-      ],
-    },
-    // Add more upcoming events here
-  ],
-  upcoming: [
-    {
-      id: 1,
-      title: "Indigenous Hackathon By DAIICT",
-      image:
-        "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-      type: "Hackathon",
-      date: "21/09/2024",
-      time: "9:00 AM - 6:00 PM",
-      venue:
-        "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-      desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-      organizer: "DAIICT Student Council",
-      capacity: 200,
-      registrationDeadline: "15/09/2024",
-      prizes: [
-        "1st Place: ₹50,000 and Internship Opportunities",
-        "2nd Place: ₹30,000 and Mentorship Program",
-        "3rd Place: ₹20,000 and Tech Gadgets",
-      ],
-      sponsors: [
-        "TechCorp India",
-        "InnovateNow Foundation",
-        "Gujarat Innovation Society",
-      ],
-    },
-    // Add more upcoming events here
-  ],
-  live: [],
-  past: [
-    {
-      id: 1,
-      title: "Indigenous Hackathon By DAIICT",
-      image:
-        "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-      type: "Hackathon",
-      date: "21/09/2024",
-      time: "9:00 AM - 6:00 PM",
-      venue:
-        "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-      desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-      organizer: "DAIICT Student Council",
-      capacity: 200,
-      registrationDeadline: "15/09/2024",
-      prizes: [
-        "1st Place: ₹50,000 and Internship Opportunities",
-        "2nd Place: ₹30,000 and Mentorship Program",
-        "3rd Place: ₹20,000 and Tech Gadgets",
-      ],
-      sponsors: [
-        "TechCorp India",
-        "InnovateNow Foundation",
-        "Gujarat Innovation Society",
-      ],
-    },
-  ],
-};
+import { AppContext } from "../context/AppContext";
+
+// const eventsData = {
+//   userEvents: [
+//     {
+//       id: 1,
+//       title: "Indigenous Hackathon By DAIICT",
+//       image:
+//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
+//       type: "Hackathon",
+//       date: "21/09/2024",
+//       time: "9:00 AM - 6:00 PM",
+//       venue:
+//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
+//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
+//       organizer: "DAIICT Student Council",
+//       capacity: 200,
+//       registrationDeadline: "15/09/2024",
+//       prizes: [
+//         "1st Place: ₹50,000 and Internship Opportunities",
+//         "2nd Place: ₹30,000 and Mentorship Program",
+//         "3rd Place: ₹20,000 and Tech Gadgets",
+//       ],
+//       sponsors: [
+//         "TechCorp India",
+//         "InnovateNow Foundation",
+//         "Gujarat Innovation Society",
+//       ],
+//     },
+//     // Add more upcoming events here
+//   ],
+//   upcoming: [
+//     {
+//       id: 1,
+//       title: "Indigenous Hackathon By DAIICT",
+//       image:
+//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
+//       type: "Hackathon",
+//       date: "21/09/2024",
+//       time: "9:00 AM - 6:00 PM",
+//       venue:
+//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
+//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
+//       organizer: "DAIICT Student Council",
+//       capacity: 200,
+//       registrationDeadline: "15/09/2024",
+//       prizes: [
+//         "1st Place: ₹50,000 and Internship Opportunities",
+//         "2nd Place: ₹30,000 and Mentorship Program",
+//         "3rd Place: ₹20,000 and Tech Gadgets",
+//       ],
+//       sponsors: [
+//         "TechCorp India",
+//         "InnovateNow Foundation",
+//         "Gujarat Innovation Society",
+//       ],
+//     },
+//     // Add more upcoming events here
+//   ],
+//   live: [],
+//   past: [
+//     {
+//       id: 1,
+//       title: "Indigenous Hackathon By DAIICT",
+//       image:
+//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
+//       type: "Hackathon",
+//       date: "21/09/2024",
+//       time: "9:00 AM - 6:00 PM",
+//       venue:
+//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
+//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
+//       organizer: "DAIICT Student Council",
+//       capacity: 200,
+//       registrationDeadline: "15/09/2024",
+//       prizes: [
+//         "1st Place: ₹50,000 and Internship Opportunities",
+//         "2nd Place: ₹30,000 and Mentorship Program",
+//         "3rd Place: ₹20,000 and Tech Gadgets",
+//       ],
+//       sponsors: [
+//         "TechCorp India",
+//         "InnovateNow Foundation",
+//         "Gujarat Innovation Society",
+//       ],
+//     },
+//   ],
+// };
 
 const Events = () => {
+  const [eventsData,setEventsData] =useState({userEvents:[],upcoming:[],live:[],past:[]})
+  const {user} = useContext(AppContext) ;
+
+  useEffect(()=>{
+    const getEvents = async ()=>{
+      try {
+        const res = await axios.post('http://localhost:8000/api/v1/events/',{'email':user.email})
+        
+        if (res.data.status===200){
+          console.log(res.data)
+          setEventsData({ 
+            userEvents:res.data.userEvents,
+            upcoming:res.data.upcoming,
+            live:res.data.live,
+            past:res.data.past
+            
+          })
+        }
+      }
+      catch(err){
+        console.log("Some error hehe")
+      }
+    }
+    getEvents()
+  },[])
+
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -104,14 +133,16 @@ const Events = () => {
     date: "",
     time: "",
     venue: "",
-    desc: "",
+    description: "",
     organizer: "",
     capacity: "",
     registrationDeadline: "",
-    prizes: [],
-    sponsors: [],
+    prizes:'',
+    sponsors: "",
   });
   const [photoPreview, setPhotoPreview] = useState("");
+  const formData = new FormData()  ;
+  formData.append("user", JSON.stringify(user)); 
 
   const filteredEvents = (events) =>
     events.filter((event) =>
@@ -127,12 +158,12 @@ const Events = () => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setFormValues({ ...formValues, dormPhotos: [file] });
+      setFormValues({ ...formValues, image: file });
       setPhotoPreview(preview);
     }
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
     const {
       title,
       image,
@@ -140,7 +171,7 @@ const Events = () => {
       date,
       time,
       venue,
-      desc,
+      description,
       organizer,
       capacity,
       registrationDeadline,
@@ -155,7 +186,7 @@ const Events = () => {
       date &&
       time &&
       venue &&
-      desc &&
+      description &&
       organizer &&
       capacity &&
       registrationDeadline &&
@@ -163,49 +194,58 @@ const Events = () => {
       sponsors
     ) {
       const newEvent = {
-        id: Date.now(),
-        title,
-        image,
-        type,
-        date,
-        time,
-        venue,
-        desc,
-        organizer,
+        email:user.email,
+        title:title,
+        image:image,
+        type:type,
+        date:date,
+        time:time,
+        venue:venue,
+        description:description,
+        organizer:organizer,
         capacity: Number(capacity),
-        registrationDeadline,
-        prizes,
-        sponsors,
+        deadline:registrationDeadline,
+        prizes:prizes,
+        sponsors:sponsors,
       };
+
+
+
+      for (const key in newEvent) {
+        if (newEvent.hasOwnProperty(key)) {
+          formData.append(key, newEvent[key]);
+        }
+      }
+
+
       console.log("New Event added:", newEvent);
-      setShowForm(false);
-      setFormValues({
-        title: "",
-        image: "",
-        type: "",
-        date: "",
-        time: "",
-        venue: "",
-        desc: "",
-        organizer: "",
-        capacity: "",
-        registrationDeadline: "",
-        prizes: [],
-        sponsors: [],
-      });
-      setPhotoPreview("");
+
+      try{
+        const res = await axios.post('http://localhost:8000/api/v1/createevent/', newEvent,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
+
+        if (res.data.status===200){
+          setShowForm(false)
+        }else{
+          console.log("Couldn't send data ")
+        }
+      }
+      catch(err){
+        console.log("Some error occured")
+        console.log(err)
+      }
+      setShowForm(false)
+
     } else {
+      console.log(formValues)
       alert("Please fill all fields and upload one photo.");
     }
   };
 
-  const handleEdit = (id) => {
-    console.log(`Edit event with id: ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    console.log(`Delete event with id: ${id}`);
-  };
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col pl-24 px-8">
@@ -305,7 +345,7 @@ const Events = () => {
             <div>
               <label className="block text-white">Time</label>{" "}
               <input
-                type="text"
+                type="time"
                 name="time"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
                 value={formValues.time}
@@ -327,9 +367,9 @@ const Events = () => {
             <div>
               <label className="block text-white">Description</label>{" "}
               <textarea
-                name="desc"
+                name="description"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.desc}
+                value={formValues.description}
                 onChange={handleInputChange}
                 rows={3}
                 required
@@ -363,7 +403,7 @@ const Events = () => {
                 type="date"
                 name="registrationDeadline"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.organizer}
+                value={formValues.registrationDeadline}
                 onChange={handleInputChange}
                 required
               />
@@ -407,18 +447,17 @@ const Events = () => {
         <div className="flex items-center justify-start space-x-3 flex-wrap">
           {eventsData.userEvents.length > 0 ? (
             filteredEvents(eventsData.userEvents)?.map((event) => (
-              <div
-                key={event.id}
+              <Link
+                to={`/eventDetails/${event.id}`}
                 className="mb-10 bg-gray-800 w-[23.5rem] h-[27rem] overflow-hidden rounded-lg shadow-lg cursor-pointer"
-                onClick={() => {
-                  navigate("/eventDetails");
-                }}
-              >
+                >
+
                 <img
-                  src={event.image}
+                  src={`http://localhost:8000${event.image}`}
                   alt={event.title}
-                  className="w-full h-50 object-cover rounded-t-lg"
-                />
+                  className="w-full h-52 object-cover rounded-t-lg"
+                  />
+                 
                 <div className="p-3 text-wrap">
                   <h3 className="text-xl font-extrabold text-yellow-500 mb-2">
                     {event.title.substring(0, 31).length <= event.title.length
@@ -449,12 +488,12 @@ const Events = () => {
                     <div className="flex space-x-1 items-center justify-center">
                       <FaRegClock />
                       <div className="font-extrabold">
-                        {event.registrationDeadline - Date.now()} days left
+                        {event.deadline}
                       </div>
                     </div>
                   </p>
                 </div>
-              </div>
+               </Link>
             ))
           ) : (
             <p className="text-gray-400 w-full text-lg text-center m-5">
@@ -470,17 +509,15 @@ const Events = () => {
         <div className="flex items-center justify-start space-x-3 flex-wrap">
           {eventsData.upcoming.length > 0 ? (
             filteredEvents(eventsData.upcoming)?.map((event) => (
-              <div
+              <Link
+              to={`/eventDetails/${event.id}`}
                 key={event.id}
                 className="mb-10 bg-gray-800 w-[23.5rem] h-[27rem] overflow-hidden rounded-lg shadow-lg cursor-pointer"
-                onClick={() => {
-                  navigate("/eventDetails");
-                }}
               >
                 <img
-                  src={event.image}
+                  src={`http://localhost:8000${event.image}`}
                   alt={event.title}
-                  className="w-full h-50 object-cover rounded-t-lg"
+                  className="w-full h-52 object-cover rounded-t-lg"
                 />
                 <div className="p-3 text-wrap">
                   <h3 className="text-xl font-extrabold text-yellow-500 mb-2">
@@ -517,7 +554,7 @@ const Events = () => {
                     </div>
                   </p>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <p className="text-gray-400 w-full text-lg text-center m-5">
@@ -532,13 +569,58 @@ const Events = () => {
         <h2 className="text-3xl font-bold mb-8 text-white">Live Events</h2>
         <div className="flex items-center justify-start space-x-3 flex-wrap">
           {eventsData.live.length > 0 ? (
-            filteredEvents(eventsData.userEvents)?.map((event) => {
-              /* Similar structure as above for event details */
-              <div key={event.id}></div>;
-            })
+            filteredEvents(eventsData.live)?.map((event) => (
+              <Link
+              to={`/eventDetails/${event.id}`}
+                key={event.id}
+                className="mb-10 bg-gray-800 w-[23.5rem] h-[27rem] overflow-hidden rounded-lg shadow-lg cursor-pointer"
+
+              >
+                <img
+                  src={`http://localhost:8000${event.image}`}
+                  alt={event.title}
+                  className="w-full h-52 object-cover rounded-t-lg"
+                />
+                <div className="p-3 text-wrap">
+                  <h3 className="text-xl font-extrabold text-yellow-500 mb-2">
+                    {event.title.substring(0, 31).length <= event.title.length
+                      ? event.title
+                      : event.title.substring(0, 31) + "..."}
+                  </h3>
+                  <div className="flex items-center justify-between text-base">
+                    <p className="text-gray-400 mb-1 font-bold">
+                      <strong>Date:</strong> {event.date}
+                    </p>
+                    <p className="text-gray-400 mb-1 font-bold">
+                      <strong>Time:</strong> {event.time}
+                    </p>
+                  </div>
+                  <p className="text-gray-400 mb-1">
+                    <strong>Venue:</strong>{" "}
+                    {event.venue.substring(0, 85).length <= event.title.length
+                      ? event.venue
+                      : event.venue.substring(0, 85) + "..."}
+                  </p>
+                  <p className="text-white mb-1">
+                    {event.organizer.substring(0, 85).length <=
+                    event.title.length
+                      ? event.organizer
+                      : event.organizer.substring(0, 85) + "..."}
+                  </p>
+                  <p className="text-gray-400 mb-1 flex items-center justify-between">
+                    <div className="flex space-x-1 items-center justify-center">
+                      <FaRegClock />
+                      <div className="font-extrabold">
+                        {event.deadline}
+                      </div>
+                    </div>
+                  </p>
+                </div>
+              </Link>
+            ))
           ) : (
             <p className="text-gray-400 w-full text-lg text-center m-5">
-              No live events found.
+              You haven't added a room yet.
             </p>
           )}
           ;
@@ -549,13 +631,58 @@ const Events = () => {
         <h2 className="text-3xl font-bold mb-8 text-white">Past Events</h2>
         <div className="flex items-center justify-start space-x-3 flex-wrap">
           {eventsData.past.length > 0 ? (
-            filteredEvents(eventsData.userEvents)?.map((event) => {
-              /* Similar structure as above for event details */
-              <div key={event.id}></div>;
-            })
+            filteredEvents(eventsData.past)?.map((event) => (
+              <Link
+              to={`/eventDetails/${event.id}`}
+                key={event.id}
+                className="mb-10 bg-gray-800 w-[23.5rem] h-[27rem] overflow-hidden rounded-lg shadow-lg cursor-pointer"
+
+              >
+                <img
+                  src={`http://localhost:8000${event.image}`}
+                  alt={event.title}
+                  className="w-full h-52 object-cover rounded-t-lg"
+                />
+                <div className="p-3 text-wrap">
+                  <h3 className="text-xl font-extrabold text-yellow-500 mb-2">
+                    {event.title.substring(0, 31).length <= event.title.length
+                      ? event.title
+                      : event.title.substring(0, 31) + "..."}
+                  </h3>
+                  <div className="flex items-center justify-between text-base">
+                    <p className="text-gray-400 mb-1 font-bold">
+                      <strong>Date:</strong> {event.date}
+                    </p>
+                    <p className="text-gray-400 mb-1 font-bold">
+                      <strong>Time:</strong> {event.time}
+                    </p>
+                  </div>
+                  <p className="text-gray-400 mb-1">
+                    <strong>Venue:</strong>{" "}
+                    {event.venue.substring(0, 85).length <= event.title.length
+                      ? event.venue
+                      : event.venue.substring(0, 85) + "..."}
+                  </p>
+                  <p className="text-white mb-1">
+                    {event.organizer.substring(0, 85).length <=
+                    event.title.length
+                      ? event.organizer
+                      : event.organizer.substring(0, 85) + "..."}
+                  </p>
+                  <p className="text-gray-400 mb-1 flex items-center justify-between">
+                    <div className="flex space-x-1 items-center justify-center">
+                      <FaRegClock />
+                      <div className="font-extrabold">
+                        {event.deadline}
+                      </div>
+                    </div>
+                  </p>
+                </div>
+              </Link>
+            ))
           ) : (
             <p className="text-gray-400 w-full text-lg text-center m-5">
-              No past events found.
+              You haven't added a room yet.
             </p>
           )}
           ;

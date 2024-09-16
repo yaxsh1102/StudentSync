@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         
     def validate(self,data):
         from .views import GetOtpView
-        print(data)
+        
         if not data['name'] or not data['email'] or not data['password'] :
             raise serializers.ValidationError("Fields marked with * must not be empty")
         if User.objects.filter(email=data['email']).exists():
@@ -45,3 +45,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
             if not len(str(data['phone']))==10:
                 raise serializers.ValidationError('Invalid Email or phone number')
         return data
+    
+class EventSerializer(serializers.ModelSerializer):
+    # user=UserSerializer()
+    class Meta:
+        model = Event
+        fields = ['id','title','image','type','date','time','venue','description','organizer','capacity','deadline','prizes','sponsors']

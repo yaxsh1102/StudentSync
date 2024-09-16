@@ -1,13 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { AppContext } from '../context/AppContext';
 
 
 const Login = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const {user,setUser,isLoggedIn,setIsLoggedIn}=useContext(AppContext)
 
   const handleLogin = async () => {
     try {
@@ -30,7 +32,7 @@ const Login = () => {
         // dispatch(setUserInfo({'email':response.data.user.email,'name':response.data.user.name}))
         localStorage.setItem('jwt',response.data.jwt)
         // dispatch(sendToast("Welcome , "+response.data.user.name))
-        navigate('/home');
+        navigate('/');
       }
       else{
         setError("Some Error Occured while Logging IN")
@@ -51,15 +53,12 @@ const Login = () => {
       const response = await axios.post('http://localhost:8000/api/v1/google-auth/', {
         token: token
       });
-
-      // dispatch(setLogin(true));
-      // dispatch(setUserInfo({
-      //   email: response.data.email,
-      //   name: response.data.name,
-      // }));
+      
+      
       if (response.data.status===200){
-        localStorage.setItem('jwt',response.data.jwt_token)
-        navigate('/home');
+        setIsLoggedIn(true)
+        localStorage.setItem('jwt',response.data.jwt)
+        navigate('/');
       }
 
     } catch (error) {

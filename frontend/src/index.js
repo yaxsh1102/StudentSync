@@ -10,16 +10,12 @@ import { Toaster } from "react-hot-toast"; // Import Toaster from react-hot-toas
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+
     <AppContextProvider>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster here */}
-      <RouterProvider router={appRouter}>
-        <BrowserRouter>
           <App />
-        </BrowserRouter>
-      </RouterProvider>
     </AppContextProvider>
-  </React.StrictMode>
+
 );
 
 reportWebVitals();
