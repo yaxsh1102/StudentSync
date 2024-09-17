@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { AppContext } from '../context/AppContext';
 
 const useGetUser =()=>{
-    const {user,setUser,isLoggedIn,setIsLoggedIn}=useContext(AppContext)
+    const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
     
     useEffect(()=>{
 
@@ -21,18 +21,20 @@ const useGetUser =()=>{
                 if (now >= expiration) {
                     localStorage.removeItem("jwt");
                     setIsLoggedIn(false)
-                    // dispatch(sendToast("Session expired, please log in again."));
+                    showToast("Session expired, please log in again.");
                 } else {
                     email=payload.email
                     setIsLoggedIn(true)
                     const timeout = expiration.getTime() - now.getTime();
                     setTimeout(() => {
                         localStorage.removeItem("jwt");
-                        // dispatch(setLogin(false))
-                        // dispatch(sendToast("Session expired, please log in again."));
+                        showToast("Session expired, please log in again.");
                         window.location.href='/login'
                     }, timeout);
                 }
+            }
+            else{
+                setIsLoggedIn(false)
             }
 
         console.log(email)

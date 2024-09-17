@@ -8,8 +8,12 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     phone=models.IntegerField(unique=True,null=True)
     birthdate=models.DateField(null=True)
+    gender = models.CharField(max_length=100,null=True)
+    area = models.CharField(max_length=300,null=True)
+    city = models.CharField(max_length=100,null=True)
+    state = models.CharField(max_length=100,null=True)
+    image = models.ImageField(upload_to='users/',null=True)
     created_at=models.DateTimeField(auto_now_add=True)
-    
     
     def __str__(self):
         return self.name +" : "+self.email
@@ -43,3 +47,14 @@ class Event(models.Model):
     
     class Meta:
         ordering = ['-date']
+        
+class Room(models.Model):
+    room_creator = models.ForeignKey(User,on_delete=models.CASCADE)
+    building_name = models.CharField(max_length=300)
+    persons_required = models.CharField(max_length=200)
+    details = models.CharField(max_length=1000)
+    address = models.CharField(max_length=400)
+    image = models.ImageField(upload_to='rooms/')
+    
+    def __str__(self):
+        return self.building_name + " : " + self.room_creator.name

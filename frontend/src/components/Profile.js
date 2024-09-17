@@ -1,20 +1,29 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const {user,showToast} = useContext(AppContext) ;
+  const [profileData,setProfileData] = useState({})
 
-  const profileData = {
-    name: "Alex Johnson",
-    gender: "Non-binary",
-    age: 28,
-    city: "San Francisco",
-    state: "California",
-    contactNumber: "+1 (555) 123-4567",
-    email: "alex.johnson@example.com",
-    picture: "https://via.placeholder.com/150",
-    area: "Uajal",
-  };
+  useEffect(()=>{
+    const getProfile = async ()=>{
+      try{
+        const res = await axios.post('http://localhost:8000/api/v1/getprofile/',{'email':user.email})
+
+        if (res.data.status===200){
+          setProfileData(res.data.profile)
+        }else{
+          showToast("Couldn't fetch Profile")
+        }
+      }catch(err){
+        showToast("Couldn't fetch Profile"+err)
+      }
+    }
+    getProfile();
+  },[])
 
   return (
     <div id="profile" className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center p-6">
@@ -22,7 +31,7 @@ const Profile = () => {
         <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-white">
           <div className="flex flex-col items-center">
             <img
-              src={profileData.picture}
+              src={"http://localhost:8000"+profileData.image}
               alt={`${profileData.name}'s profile`}
               className="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl object-cover"
             />
@@ -33,13 +42,13 @@ const Profile = () => {
         <div className="p-6">
           <div className="space-y-4">
             <InfoItem label="Gender" value={profileData.gender} />
-            <InfoItem label="Age" value={profileData.age} />
+            <InfoItem label="Age" value={profileData.birthdate} />
             <InfoItem label="Area" value={profileData.area} />
             <InfoItem label="City" value={profileData.city} />
             <InfoItem label="State" value={profileData.state} />
             <InfoItem
               label="Contact Number"
-              value={profileData.contactNumber}
+              value={profileData.phone}
             />
           </div>
           <button

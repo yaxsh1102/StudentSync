@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
 import useGetUser from '../hooks/useGetUser';
+import { AppContext } from '../context/AppContext';
 
 
 const Signup = () => {
@@ -11,7 +12,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const emailPattern = '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$';
   const emailRegex = new RegExp(emailPattern);
-
+  const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
 
   const handleGetOtp =async()=>{
     const email = inputRefs.current['email'].value;
@@ -76,13 +77,10 @@ const Signup = () => {
         token: token
       });
 
-      // dispatch(setLogin(true));
-      // dispatch(setUserInfo({
-      //   email: response.data.email,
-      //   name: response.data.name,
-      // }));
       if (response.data.status===200){
+        setIsLoggedIn(true)
         localStorage.setItem('jwt',response.data.jwt)
+        showToast("Welcome , "+user.name)
         
         navigate('/');
       }

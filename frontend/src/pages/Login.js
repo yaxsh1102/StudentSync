@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
+import useGetUser from '../hooks/useGetUser';
 
 
 const Login = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const {user,setUser,isLoggedIn,setIsLoggedIn}=useContext(AppContext)
+  const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
 
   const handleLogin = async () => {
     try {
@@ -28,10 +29,9 @@ const Login = () => {
       });
       
       if (response.data.status===200){
-        // dispatch(setLogin(true))
-        // dispatch(setUserInfo({'email':response.data.user.email,'name':response.data.user.name}))
+        setIsLoggedIn(true)
         localStorage.setItem('jwt',response.data.jwt)
-        // dispatch(sendToast("Welcome , "+response.data.user.name))
+        showToast("Welcome , "+user.name)
         navigate('/');
       }
       else{
@@ -58,6 +58,7 @@ const Login = () => {
       if (response.data.status===200){
         setIsLoggedIn(true)
         localStorage.setItem('jwt',response.data.jwt)
+        showToast("Welcome , "+user.name)
         navigate('/');
       }
 

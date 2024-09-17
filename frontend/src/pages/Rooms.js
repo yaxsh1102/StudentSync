@@ -1,49 +1,50 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Search, Plus, X } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import RoomCard from "../components/RoomCard";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
 
 const Rooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
-    buildingName: "",
-    personsRequired: "",
-    roomDetails: "",
-    roomPhotos: [],
+    building_name: "",
+    persons_required: "",
+    details: "",
+    image: [],
+    address:'',
   });
   const [photoPreview, setPhotoPreview] = useState("");
-  const {user} = useContext(AppContext) ;
+  const {user,showToast} = useContext(AppContext) ;
+  const [roomsData, setRoomsData] = useState({userRoom:'',availableRooms:[]})
 
-  // Combined state for userRoom and availableRooms
-  const [roomsData, setRoomsData] = useState({
-    userRoom: null,
-    availableRooms: [
-      {
-        id: 1,
-        buildingName: "Sunrise Tower",
-        personsRequired: 2,
-        address: "123 Main St",
-      },
-      {
-        id: 2,
-        buildingName: "Maple Apartments",
-        personsRequired: 1,
-        address: "456 Maple St",
-      },
-      {
-        id: 3,
-        buildingName: "Oceanview Heights",
-        personsRequired: 3,
-        address: "789 Ocean Ave",
-      },
-    ],
-  });
+  useEffect(()=>{
+    const getRooms=async()=>{
+      try{
+        const res = await axios.post('http://localhost:8000/api/v1/getrooms/',{'email':user.email})
+
+        if (res.data.status===200){
+          setRoomsData({
+            userRoom:res.data.userRoom,
+            availableRooms:res.data.availableRooms,
+          })
+          console.log(res.data.availableRooms[0].building_name)
+          // console.log(roomsData)
+        }
+        else{
+          console.log("error fetching rooms")
+        }
+      }catch(err){
+        console.log("Error while Fetching Rooms : "+err)
+      }
+    }
+    getRooms();
+  },[])
 
   const filterRooms = (rooms) =>
     rooms.filter((room) =>
-      room.buildingName.toLowerCase().includes(searchTerm.toLowerCase())
+      room.building_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleInputChange = (e) => {
@@ -55,57 +56,91 @@ const Rooms = () => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setFormValues({ ...formValues, roomPhotos: [file] });
+      setFormValues({ ...formValues, image: file });
       setPhotoPreview(preview);
     }
   };
 
-  const handleAddRoom = () => {
-    const { buildingName, personsRequired, roomDetails, roomPhotos } =
+  const handleAddRoom = async () => {
+    const { building_name, persons_required, details, image , address } =
       formValues;
 
     if (
-      buildingName &&
-      personsRequired &&
-      roomDetails &&
-      roomPhotos.length === 1
+      building_name &&
+      persons_required &&
+      details &&
+      address &&
+      image
     ) {
       const newRoom = {
         id: Date.now(),
-        buildingName,
-        personsRequired: Number(personsRequired),
-        roomDetails,
-        roomPhotos,
-        // address: "user.area",
-        address:"abhi ke lie ye h baadme user.address"
-      };
+        email:user.email,
+        building_name:building_name,
+        persons_required: Number(persons_required),
+        details:details,
+        image:image,
+        address:address
+      };// edited data according to backend
 
 
       //make the api calllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+      try{
+        const res = await axios.post('http://localhost:8000/api/v1/createroom/',newRoom,{
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        })
+
+        if (res.data.status===200){
+          showToast("Room Added !")
+          setShowForm(false);
+          setFormValues({
+            building_name: "",
+            persons_required: "",
+            details: "",
+            image: [],
+          });
+          setPhotoPreview("");
+        }
+        else{
+          showToast("Error Occured while Adding room ")
+        }
+      }
+      catch(err){
+        showToast("Some Error Occured while Adding room ")
+      }
 
       setRoomsData((prevState) => ({
         userRoom: newRoom,
-        availableRooms: [...prevState.availableRooms, newRoom],
+        // availableRooms: [...prevState.availableRooms, newRoom],
       }));
 
-      setShowForm(false);
-      setFormValues({
-        buildingName: "",
-        personsRequired: "",
-        roomDetails: "",
-        roomPhotos: [],
-      });
-      setPhotoPreview("");
+      
     } else {
+      console.log(formValues)
       alert("Please fill all fields and upload one photo.");
     }
   };
 
-  const handleDeleteRoom = () => {
-      setRoomsData((prevState) => ({
-        ...prevState,
-        userRoom: null,
-      }));
+  const handleDeleteRoom = async() => {
+
+    try{
+      const res = await axios.post('http://localhost:8000/api/v1/deleteroom/',{'email':user.email})
+
+      if (res.data.status===200){
+        setRoomsData((prevState) => ({
+          ...prevState,
+          userRoom: null,
+        }));
+        showToast("Room Deleted Successfully !")
+      }
+      else{
+        console.log("error deleting room")
+      }
+    }catch(err){
+      console.log("Error while Deleting Room : "+err)
+    }
+      
     
   };
 
@@ -158,9 +193,9 @@ const Rooms = () => {
                   <label className="block text-white">Building Name</label>
                   <input
                     type="text"
-                    name="buildingName"
+                    name="building_name"
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                    value={formValues.buildingName}
+                    value={formValues.building_name}
                     onChange={handleInputChange}
                     required
                   />
@@ -169,9 +204,9 @@ const Rooms = () => {
                   <label className="block text-white">Persons Required</label>
                   <input
                     type="number"
-                    name="personsRequired"
+                    name="persons_required"
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                    value={formValues.personsRequired}
+                    value={formValues.persons_required}
                     onChange={handleInputChange}
                     required
                   />
@@ -180,9 +215,20 @@ const Rooms = () => {
                 <div>
                   <label className="block text-white">Room Details</label>
                   <textarea
-                    name="roomDetails"
+                    name="details"
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                    value={formValues.roomDetails}
+                    value={formValues.details}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white">Room Address</label>
+                  <textarea
+                    name="address"
+                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
+                    value={formValues.address}
                     onChange={handleInputChange}
                     required
                   />
@@ -227,8 +273,9 @@ const Rooms = () => {
             </h2>
             {roomsData.userRoom ? (
               <RoomCard
-                buildingName={roomsData.userRoom.buildingName}
-                personsRequired={roomsData.userRoom.personsRequired}
+                id={roomsData.userRoom.id}
+                building_name={roomsData.userRoom.building_name}
+                persons_required={roomsData.userRoom.persons_required}
                 address={roomsData.userRoom.address}
                 onDelete={() => handleDeleteRoom()}
                 isOwned={true}
@@ -248,8 +295,9 @@ const Rooms = () => {
               filterRooms(roomsData.availableRooms).map((room) => (
                 <RoomCard
                   key={room.id}
-                  buildingName={room.buildingName}
-                  personsRequired={room.personsRequired}
+                  id={room.id}
+                  building_name={room.building_name}
+                  persons_required={room.persons_required}
                   address={room.address}
                   isOwned={false}
                 />

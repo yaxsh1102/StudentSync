@@ -59,9 +59,9 @@ const StudentSync = () => {
                 <Route path="rooms" element={<Suspense fallback={<Loading />}><Rooms /></Suspense>} />
                 <Route path="dormitory" element={<Suspense fallback={<Loading />}><DormitoryPage /></Suspense>} />
                 <Route path="dormitoryDetails" element={<Suspense fallback={<Loading />}><DormitoryDetails /></Suspense>} />
-                <Route path="roomDetails" element={<Suspense fallback={<Loading />}><RoomDetails /></Suspense>} />
+                <Route path="roomDetails/:param" element={<Suspense fallback={<Loading />}><RoomDetails /></Suspense>} />
               </Route>
-              {/* <Route path="*" element={<Navigate to="/" />} /> */}
+              <Route path="*" element={<Navigate to="/" />} />
             </>
           ) : (
             <>

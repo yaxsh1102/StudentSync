@@ -51,3 +51,21 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['id','title','image','type','date','time','venue','description','organizer','capacity','deadline','prizes','sponsors']
+        
+        
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['id','building_name','persons_required','details','address','image']
+        
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields = ['name','phone', 'gender','birthdate','area','city','state','image']
+        
+        def validate(self,data):
+            if data['phone']:
+                if User.objects.filter(phone=data['phone']).exists():
+                    raise serializers.ValidationError("Contact Number is already in use.")
+                if  not len(str(data['phone']))==10:
+                    raise serializers.ValidationError("Contact number must be 10 of digits")

@@ -195,7 +195,6 @@ class GetUserDataView(APIView):
             },status=status.HTTP_404_NOT_FOUND)
             
 class EventView(APIView):
-    # parser_classes = (MultiPartParser, FormParser)
     
     def post(self,request):
         email = request.data.get('email')
@@ -219,8 +218,6 @@ class EventView(APIView):
                 past+=eventSer.data,
             else:
                 live+=eventSer.data,
-                
-        print(userEvents)
         
         return Response({
             'status':200,
@@ -278,14 +275,149 @@ class GetEventDetail(APIView):
             'event':eventSer.data
         },status=status.HTTP_200_OK)
     
+class CreateRoomView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request):
+        print(request.data)
 
+        email = request.data.get('email')
 
-
-
-
-
-
+        try:
+            user =User.objects.get(email=email)
             
+            if len(Room.objects.filter(room_creator=user)) > 0:
+                return Response({
+                        'status': 400,
+                        'message': "User Have already created 1 room"
+                    }, status=status.HTTP_403_FORBIDDEN)
+            
+            ser = RoomSerializer(data=request.data)
+            if ser.is_valid():
+                ser.save(room_creator=user)
+                
+                return Response({
+                        'status': 200,
+                        'message': "Room Created Successfully"
+                    }, status=status.HTTP_201_CREATED)
+            else:
+                err = ser.errors  
+                print(err)
+                return Response({
+                    'status': 400,
+                    'message': err
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except User.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'No user found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+class RoomView(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        rooms = Room.objects.all()
+        userRoom,availableRooms=[],[]
+        
+        user=User.objects.get(email=email)
+        userRoom_query=Room.objects.filter(room_creator=user)
+        
+        if len(userRoom_query)>0:
+            userRoom=RoomSerializer(userRoom_query[0])
+        
+        for i in rooms :
+            eventSer = RoomSerializer(i)
+            if not userRoom or eventSer.data !=userRoom.data:
+                availableRooms+=eventSer.data,
+            
+        
+        return Response({
+            'status':200,
+            'userRoom':userRoom.data if userRoom else None,
+            'availableRooms':availableRooms,
+        },status=status.HTTP_200_OK)
+    
+class DeleteRoomView(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        try:
+            user=User.objects.get(email=email)
+            userRoom=Room.objects.filter(room_creator=user)[0]
+            userRoom.delete()
+            return Response({
+                        'status': 200,
+                        'message': "Room deleted successfully"
+                    }, status=status.HTTP_200_OK)
+
+        except :
+            return Response({
+                'status': 404,
+                'message': 'No user found'
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+class GetRoomDetail(APIView):
+    def post(self,request):
+        id = request.data.get('id')
+        room = Room.objects.get(id=id)
+        roomSer = RoomSerializer(room)
+        print(roomSer.data)
+        user=UserSerializer(room.room_creator)
+        
+        return Response({
+            'status':200,
+            'event':roomSer.data,
+            'owner':user.data,
+        },status=status.HTTP_200_OK)
+
+class UpdateProfileView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self,request):
+        ser = ProfileSerializer(data=request.data)
+        user=User.objects.get(email=request.data.get('email'))
+        
+        if ser.is_valid():
+            data = ser.validated_data
+            user.name = data['name']
+            user.phone = data['phone']
+            user.birthdate = data['birthdate']
+            user.gender = data['gender']
+            user.area = data['area']
+            user.city = data['city']
+            user.state = data['state']
+            user.image = data['image']
+            user.save()
+            
+            return Response({
+                'status':200,
+                'message':"Profile Updated successfully"
+            },status=status.HTTP_200_OK)
+        else:
+            
+            errors = ser.errors
+            print(errors)
+            return Response({
+                'status': 400,
+                'message':errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileView(APIView):
+    
+    def  post(self,request):
+        email=request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            ser = ProfileSerializer(user)
+            print(ser.data)
+            return Response({
+                'status':200,
+                'profile':ser.data
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({
+                'status':400,
+                'messages':"User Not found"
+            },status=status.HTTP_400_BAD_REQUEST)
             
         
             
