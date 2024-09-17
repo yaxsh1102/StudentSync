@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Search, Plus, X } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import RoomCard from "../components/RoomCard";
+import { AppContext } from "../context/AppContext";
 
 const Rooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [userRoom, setUserRoom] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
     buildingName: "",
@@ -14,27 +14,32 @@ const Rooms = () => {
     roomPhotos: [],
   });
   const [photoPreview, setPhotoPreview] = useState("");
+  const {user} = useContext(AppContext) ;
 
-  const availableRooms = [
-    {
-      id: 1,
-      buildingName: "Sunrise Tower",
-      personsRequired: 2,
-      address: "123 Main St",
-    },
-    {
-      id: 2,
-      buildingName: "Maple Apartments",
-      personsRequired: 1,
-      address: "456 Maple St",
-    },
-    {
-      id: 3,
-      buildingName: "Oceanview Heights",
-      personsRequired: 3,
-      address: "789 Ocean Ave",
-    },
-  ];
+  // Combined state for userRoom and availableRooms
+  const [roomsData, setRoomsData] = useState({
+    userRoom: null,
+    availableRooms: [
+      {
+        id: 1,
+        buildingName: "Sunrise Tower",
+        personsRequired: 2,
+        address: "123 Main St",
+      },
+      {
+        id: 2,
+        buildingName: "Maple Apartments",
+        personsRequired: 1,
+        address: "456 Maple St",
+      },
+      {
+        id: 3,
+        buildingName: "Oceanview Heights",
+        personsRequired: 3,
+        address: "789 Ocean Ave",
+      },
+    ],
+  });
 
   const filterRooms = (rooms) =>
     rooms.filter((room) =>
@@ -71,9 +76,18 @@ const Rooms = () => {
         personsRequired: Number(personsRequired),
         roomDetails,
         roomPhotos,
-        address: "Address not provided",
+        // address: "user.area",
+        address:"abhi ke lie ye h baadme user.address"
       };
-      setUserRoom(newRoom);
+
+
+      //make the api calllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+
+      setRoomsData((prevState) => ({
+        userRoom: newRoom,
+        availableRooms: [...prevState.availableRooms, newRoom],
+      }));
+
       setShowForm(false);
       setFormValues({
         buildingName: "",
@@ -88,7 +102,11 @@ const Rooms = () => {
   };
 
   const handleDeleteRoom = () => {
-    setUserRoom(null);
+      setRoomsData((prevState) => ({
+        ...prevState,
+        userRoom: null,
+      }));
+    
   };
 
   return (
@@ -110,7 +128,7 @@ const Rooms = () => {
               size={20}
             />
           </div>
-          {!userRoom && (
+          {!roomsData.userRoom && (
             <button
               onClick={() => setShowForm(!showForm)}
               className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg flex items-center transition-colors duration-300"
@@ -207,12 +225,12 @@ const Rooms = () => {
             <h2 className="text-2xl font-semibold text-white mb-4">
               Your Room
             </h2>
-            {userRoom ? (
+            {roomsData.userRoom ? (
               <RoomCard
-                buildingName={userRoom.buildingName}
-                personsRequired={userRoom.personsRequired}
-                address={userRoom.address}
-                onDelete={handleDeleteRoom}
+                buildingName={roomsData.userRoom.buildingName}
+                personsRequired={roomsData.userRoom.personsRequired}
+                address={roomsData.userRoom.address}
+                onDelete={() => handleDeleteRoom()}
                 isOwned={true}
               />
             ) : (
@@ -226,19 +244,20 @@ const Rooms = () => {
             <h2 className="text-2xl font-semibold text-white mb-4">
               Available Rooms
             </h2>
-            {filterRooms(availableRooms).length > 0 ? (
-              filterRooms(availableRooms).map((room) => (
+            {filterRooms(roomsData.availableRooms).length > 0 ? (
+              filterRooms(roomsData.availableRooms).map((room) => (
                 <RoomCard
                   key={room.id}
                   buildingName={room.buildingName}
                   personsRequired={room.personsRequired}
                   address={room.address}
-                  onDelete={() => console.log("Room deleted")}
                   isOwned={false}
                 />
               ))
             ) : (
-              <p className="text-gray-400 text-center mt-4">No rooms found.</p>
+              <p className="text-gray-400 text-center">
+                No rooms available for the search term.
+              </p>
             )}
           </div>
         </div>

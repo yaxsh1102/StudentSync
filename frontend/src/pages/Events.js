@@ -9,92 +9,6 @@ import axios from 'axios'
 
 import { AppContext } from "../context/AppContext";
 
-// const eventsData = {
-//   userEvents: [
-//     {
-//       id: 1,
-//       title: "Indigenous Hackathon By DAIICT",
-//       image:
-//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-//       type: "Hackathon",
-//       date: "21/09/2024",
-//       time: "9:00 AM - 6:00 PM",
-//       venue:
-//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-//       organizer: "DAIICT Student Council",
-//       capacity: 200,
-//       registrationDeadline: "15/09/2024",
-//       prizes: [
-//         "1st Place: ₹50,000 and Internship Opportunities",
-//         "2nd Place: ₹30,000 and Mentorship Program",
-//         "3rd Place: ₹20,000 and Tech Gadgets",
-//       ],
-//       sponsors: [
-//         "TechCorp India",
-//         "InnovateNow Foundation",
-//         "Gujarat Innovation Society",
-//       ],
-//     },
-//     // Add more upcoming events here
-//   ],
-//   upcoming: [
-//     {
-//       id: 1,
-//       title: "Indigenous Hackathon By DAIICT",
-//       image:
-//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-//       type: "Hackathon",
-//       date: "21/09/2024",
-//       time: "9:00 AM - 6:00 PM",
-//       venue:
-//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-//       organizer: "DAIICT Student Council",
-//       capacity: 200,
-//       registrationDeadline: "15/09/2024",
-//       prizes: [
-//         "1st Place: ₹50,000 and Internship Opportunities",
-//         "2nd Place: ₹30,000 and Mentorship Program",
-//         "3rd Place: ₹20,000 and Tech Gadgets",
-//       ],
-//       sponsors: [
-//         "TechCorp India",
-//         "InnovateNow Foundation",
-//         "Gujarat Innovation Society",
-//       ],
-//     },
-//     // Add more upcoming events here
-//   ],
-//   live: [],
-//   past: [
-//     {
-//       id: 1,
-//       title: "Indigenous Hackathon By DAIICT",
-//       image:
-//         "https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/mobile_banner/66cd7d58804b7_building-your-power-brand.webp?d=413x236",
-//       type: "Hackathon",
-//       date: "21/09/2024",
-//       time: "9:00 AM - 6:00 PM",
-//       venue:
-//         "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-//       description: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-//       organizer: "DAIICT Student Council",
-//       capacity: 200,
-//       registrationDeadline: "15/09/2024",
-//       prizes: [
-//         "1st Place: ₹50,000 and Internship Opportunities",
-//         "2nd Place: ₹30,000 and Mentorship Program",
-//         "3rd Place: ₹20,000 and Tech Gadgets",
-//       ],
-//       sponsors: [
-//         "TechCorp India",
-//         "InnovateNow Foundation",
-//         "Gujarat Innovation Society",
-//       ],
-//     },
-//   ],
-// };
 
 const Events = () => {
   const [eventsData,setEventsData] =useState({userEvents:[],upcoming:[],live:[],past:[]})
@@ -230,7 +144,12 @@ const Events = () => {
 
         if (res.data.status===200){
           setShowForm(false)
-        }else{
+
+          setEventsData((prevData) => ({
+            ...prevData,
+            userEvents: [...prevData.userEvents, newEvent],
+          }));  
+          }else{
           console.log("Couldn't send data ")
         }
       }

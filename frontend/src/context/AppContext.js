@@ -5,7 +5,7 @@ export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
   const [user, setUser] = useState();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentRoom, setCurrentRoom] = useState();
   const [currentDormitory, setCurrentDormitory] = useState();
   const [events,setEvents] = useState({})
