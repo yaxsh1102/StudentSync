@@ -21,6 +21,7 @@ const useGetUser =()=>{
                 if (now >= expiration) {
                     localStorage.removeItem("jwt");
                     setIsLoggedIn(false)
+                    // window.location.href='/login'
                     showToast("Session expired, please log in again.");
                 } else {
                     email=payload.email
@@ -35,15 +36,17 @@ const useGetUser =()=>{
             }
             else{
                 setIsLoggedIn(false)
+                // window.location.href='/login'
             }
 
         console.log(email)
         if (email){
             setIsLoggedIn(true)
+            // window.location.href='/'
             try{
                 const response = await axios.post('http://localhost:8000/api/v1/getuserdata/',{'email':email})
-                console.log(response.data)
                 setUser(response.data.user)
+                console.log(user)
             }
             catch(err){
                 console.log(err)

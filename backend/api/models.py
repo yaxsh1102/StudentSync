@@ -58,3 +58,16 @@ class Room(models.Model):
     
     def __str__(self):
         return self.building_name + " : " + self.room_creator.name
+    
+    
+class Dormitory(models.Model):
+    dorm_creator = models.ForeignKey(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    address = models.CharField(max_length=500)
+    capacity = models.CharField(max_length=100)
+    description = models.TextField()
+    image=models.ImageField(upload_to='dorms/')
+    
+    
+    def __str__(self):
+        return self.name

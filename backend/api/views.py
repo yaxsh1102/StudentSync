@@ -15,6 +15,8 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 import json
 from rest_framework.parsers import MultiPartParser, FormParser
+import os
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 def create_jwt(email):
     payload = {
@@ -183,7 +185,8 @@ class GetUserDataView(APIView):
     def post(self,request):
         try:
             user = User.objects.get(email=request.data.get('email'))
-            ser = UserSerializer(user)
+            ser = ProfileSerializer(user)
+            # print(ser.data)
             
             return Response({
                 'status':200,
@@ -202,30 +205,37 @@ class EventView(APIView):
         today = date.today()
         userEvents,upcoming,live,past=[],[],[],[]
         
-        user=User.objects.get(email=email)
-        allUserEvents=Event.objects.filter(event_handler=user)
-        
-        for i in allUserEvents:
-            eventSer = EventSerializer(i)
-            userEvents+=eventSer.data,
-
-        for i in events :
-            eventSer = EventSerializer(i)
+        try:
+            user=User.objects.get(email=email)
+            allUserEvents=Event.objects.filter(event_handler=user)
             
-            if i.date > today:
-                upcoming+=eventSer.data,
-            elif i.date < today:
-                past+=eventSer.data,
-            else:
-                live+=eventSer.data,
-        
-        return Response({
-            'status':200,
-            'userEvents':userEvents,
-            'upcoming':upcoming,
-            'live':live,
-            'past':past
-        },status=status.HTTP_200_OK)
+            for i in allUserEvents:
+                eventSer = EventSerializer(i)
+                userEvents+=eventSer.data,
+
+            for i in events :
+                eventSer = EventSerializer(i)
+                
+                if i.date > today:
+                    upcoming+=eventSer.data,
+                elif i.date < today:
+                    past+=eventSer.data,
+                else:
+                    live+=eventSer.data,
+            
+            return Response({
+                'status':200,
+                'userEvents':userEvents,
+                'upcoming':upcoming,
+                'live':live,
+                'past':past
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
     
 class CreateEventView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -254,26 +264,31 @@ class CreateEventView(APIView):
                     'message': err
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-        except User.DoesNotExist:
-            # Handle case where no user is found
+        except Exception as e:
+            print(e)
             return Response({
                 'status': 404,
-                'message': 'No user found'
-            }, status=status.HTTP_404_NOT_FOUND)
+                'message': 'Some Error Occured'
+            })
 
 class GetEventDetail(APIView):
     permission_classes=[AllowAny]
     
     def post(self,request):
         id = request.data.get('id')
-        event = Event.objects.get(id=id)
-        eventSer = EventSerializer(event)
-        print(id)
-        print(event)
-        return Response({
-            'status':200,
-            'event':eventSer.data
-        },status=status.HTTP_200_OK)
+        try:
+            event = Event.objects.get(id=id)
+            eventSer = EventSerializer(event)
+            return Response({
+                'status':200,
+                'event':eventSer.data
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
     
 class CreateRoomView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -319,23 +334,31 @@ class RoomView(APIView):
         rooms = Room.objects.all()
         userRoom,availableRooms=[],[]
         
-        user=User.objects.get(email=email)
-        userRoom_query=Room.objects.filter(room_creator=user)
+        try:
         
-        if len(userRoom_query)>0:
-            userRoom=RoomSerializer(userRoom_query[0])
-        
-        for i in rooms :
-            eventSer = RoomSerializer(i)
-            if not userRoom or eventSer.data !=userRoom.data:
-                availableRooms+=eventSer.data,
+            user=User.objects.get(email=email)
+            userRoom_query=Room.objects.filter(room_creator=user)
             
-        
-        return Response({
-            'status':200,
-            'userRoom':userRoom.data if userRoom else None,
-            'availableRooms':availableRooms,
-        },status=status.HTTP_200_OK)
+            if len(userRoom_query)>0:
+                userRoom=RoomSerializer(userRoom_query[0])
+            
+            for i in rooms :
+                eventSer = RoomSerializer(i)
+                if not userRoom or eventSer.data !=userRoom.data:
+                    availableRooms+=eventSer.data,
+                
+            
+            return Response({
+                'status':200,
+                'userRoom':userRoom.data if userRoom else None,
+                'availableRooms':availableRooms,
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
     
 class DeleteRoomView(APIView):
     def post(self,request):
@@ -349,65 +372,80 @@ class DeleteRoomView(APIView):
                         'message': "Room deleted successfully"
                     }, status=status.HTTP_200_OK)
 
-        except :
+        except Exception as e:
+            print(e)
             return Response({
                 'status': 404,
-                'message': 'No user found'
-            }, status=status.HTTP_404_NOT_FOUND)
+                'message': 'Some Error Occured'
+            })
             
 class GetRoomDetail(APIView):
     def post(self,request):
         id = request.data.get('id')
-        room = Room.objects.get(id=id)
-        roomSer = RoomSerializer(room)
-        print(roomSer.data)
-        user=UserSerializer(room.room_creator)
         
-        return Response({
-            'status':200,
-            'event':roomSer.data,
-            'owner':user.data,
-        },status=status.HTTP_200_OK)
+        try:
+            room = Room.objects.get(id=id)
+            roomSer = RoomSerializer(room)
+            print(roomSer.data)
+            user=UserSerializer(room.room_creator)
+            
+            return Response({
+                'status':200,
+                'event':roomSer.data,
+                'owner':user.data,
+            },status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
 
 class UpdateProfileView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     def post(self,request):
-        ser = ProfileSerializer(data=request.data)
-        user=User.objects.get(email=request.data.get('email'))
-        
-        if ser.is_valid():
-            data = ser.validated_data
+        data=request.data
+        try:
+            user=User.objects.get(email=request.data.get('email'))
+            print(data)
             user.name = data['name']
-            user.phone = data['phone']
+            
+            if len(User.objects.filter(phone=data['phone'])) == 0 :
+                user.phone = data['phone']
+            else:
+                return Response({
+                'status':400,
+                'message': "Entered Phone Number Already Exists"
+            },status=status.HTTP_200_OK)
             user.birthdate = data['birthdate']
             user.gender = data['gender']
             user.area = data['area']
             user.city = data['city']
             user.state = data['state']
-            user.image = data['image']
+            image = data.get('image', None)
+            if image and isinstance(image, InMemoryUploadedFile):
+                user.image = image
             user.save()
-            
+                
             return Response({
                 'status':200,
                 'message':"Profile Updated successfully"
-            },status=status.HTTP_200_OK)
-        else:
-            
-            errors = ser.errors
-            print(errors)
+            })
+        except Exception as e:
+            print(e)
             return Response({
-                'status': 400,
-                'message':errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
+                'status':400,
+                'message':e
+            },status=status.HTTP_400_BAD_REQUEST)
+            
 class ProfileView(APIView):
     
     def  post(self,request):
-        email=request.data.get('email')
+        id=request.data.get('id')
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(id=id)
             ser = ProfileSerializer(user)
-            print(ser.data)
+            # print(ser.data)
             return Response({
                 'status':200,
                 'profile':ser.data
@@ -419,5 +457,123 @@ class ProfileView(APIView):
                 'messages':"User Not found"
             },status=status.HTTP_400_BAD_REQUEST)
             
+class DormitoryView(APIView):
+    
+    def post(self,request):
+        email = request.data.get('email')
+        userDormitories,otherDormitories=[],[]
+        userDormId=[]
+        try:
+            user = User.objects.get(email=email)
+            allUserDormitories= Dormitory.objects.filter(dorm_creator=user)
+            
+            for i in allUserDormitories:
+                ser = DormitorySerializer(i)
+                userDormitories+=ser.data, 
+                userDormId+=ser.data,
+                
+            allOtherDormitories= Dormitory.objects.all()
+
+            for i in allOtherDormitories:
+                ser = DormitorySerializer(i)
+                
+                if ser.data not in userDormId:
+                    otherDormitories+=ser.data,
+                    
+            return Response({
+                'status':200,
+                'userDormitories':userDormitories,
+                'otherDormitories':otherDormitories,
+            })
+                    
+        except Exception as e:
+            print(e)
+            return Response({
+                'status':400,
+                'messages':"Some Error Occured in server while fetching dorms"
+            })
+
+class CreateDormitoryView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self,request):
+        email = request.data.get('email')
+
+        try:
+            user=User.objects.get(email=email)
+            
+            ser = DormitorySerializer(data=request.data)
+            
+            if ser.is_valid():
+                ser.save(dorm_creator=user)
+                print("DORM CREATED")
+                return Response({
+                'status':200,
+                'message':"Dorm Added"
+            })
+            else:
+                err = ser.errors  
+                print(err)
+                return Response({
+                    'status': 400,
+                    'message': err
+                })
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
+            
+class DeleteDormitoryView(APIView):
+    def post(self, request):
+        id = request.data.get('id')
+            
+        try:
+            dorm = Dormitory.objects.get(id=id)
+            dorm.delete()
+            
+            return Response({
+                'status':200,
+                'message':"Dorm Deleted"
+            })
+            
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
+            
+class GetDormitoryDetailsView(APIView):
+    
+    def post(self,request):
+        id = request.data.get('id')
         
+        try:
+            dorm = Dormitory.objects.get(id=id)
+            dormitory = DormitorySerializer(dorm)
+            owner = UserSerializer(dorm.dorm_creator)
+            
+            return Response({
+                'status':200,
+                'dormitory':dormitory.data,
+                'owner':owner.data,
+            })
+            
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
+            
+            
+            
+            
+            
+            
+            
+            
+            
             

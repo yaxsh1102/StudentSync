@@ -9,44 +9,44 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 
-const event = {
-  id: 1,
-  title: "Indigenous Hackathon By DAIICT",
-  image:
-    "https://th.bing.com/th/id/OIP._D1d2TEmPIdlP6Y7HuT7qwHaEX?rs=1&pid=ImgDetMain",
-  type: "Hackathon",
-  date: "21/09/2024",
-  time: "9:00 AM - 6:00 PM",
-  venue:
-    "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-  desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities. This event, organized by DAIICT, brings together talented developers, designers, and problem-solvers to address real-world challenges faced by these communities. Participants will have the opportunity to collaborate, learn from experts, and create impactful projects that foster social innovation.",
-  organizer: "DAIICT Student Council",
-  capacity: 200,
-  registrationDeadline: "15/09/2024",
-  prizes: [
-    "1st Place: ₹50,000 and Internship Opportunities",
-    "2nd Place: ₹30,000 and Mentorship Program",
-    "3rd Place: ₹20,000 and Tech Gadgets",
-  ],
-  sponsors: [
-    "TechCorp India",
-    "InnovateNow Foundation",
-    "Gujarat Innovation Society",
-  ],
-};
+// const event = {
+//   id: 1,
+//   title: "Indigenous Hackathon By DAIICT",
+//   image:
+//     "https://th.bing.com/th/id/OIP._D1d2TEmPIdlP6Y7HuT7qwHaEX?rs=1&pid=ImgDetMain",
+//   type: "Hackathon",
+//   date: "21/09/2024",
+//   time: "9:00 AM - 6:00 PM",
+//   venue:
+//     "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
+//   desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities. This event, organized by DAIICT, brings together talented developers, designers, and problem-solvers to address real-world challenges faced by these communities. Participants will have the opportunity to collaborate, learn from experts, and create impactful projects that foster social innovation.",
+//   organizer: "DAIICT Student Council",
+//   capacity: 200,
+//   registrationDeadline: "15/09/2024",
+//   prizes: [
+//     "1st Place: ₹50,000 and Internship Opportunities",
+//     "2nd Place: ₹30,000 and Mentorship Program",
+//     "3rd Place: ₹20,000 and Tech Gadgets",
+//   ],
+//   sponsors: [
+//     "TechCorp India",
+//     "InnovateNow Foundation",
+//     "Gujarat Innovation Society",
+//   ],
+// };
 
-const rules = [
-  "Registration is required. Please sign up through the official event website before the deadline.",
-  "Participants must form teams of 3-5 members. Inter-college teams are allowed.",
-  "All team members must be present at the venue for the entire duration of the hackathon.",
-  "Participants must bring their own laptops and any other necessary equipment.",
-  "Projects must be original and developed entirely during the hackathon.",
-  "Use of open-source libraries and APIs is allowed, but must be disclosed.",
-  "Respect intellectual property rights and do not use copyrighted material without permission.",
-  "The decision of the judges will be final in determining the winners.",
-  "Maintain a professional and respectful demeanor throughout the event.",
-  "Follow all health and safety protocols in place at the venue.",
-];
+// const rules = [
+//   "Registration is required. Please sign up through the official event website before the deadline.",
+//   "Participants must form teams of 3-5 members. Inter-college teams are allowed.",
+//   "All team members must be present at the venue for the entire duration of the hackathon.",
+//   "Participants must bring their own laptops and any other necessary equipment.",
+//   "Projects must be original and developed entirely during the hackathon.",
+//   "Use of open-source libraries and APIs is allowed, but must be disclosed.",
+//   "Respect intellectual property rights and do not use copyrighted material without permission.",
+//   "The decision of the judges will be final in determining the winners.",
+//   "Maintain a professional and respectful demeanor throughout the event.",
+//   "Follow all health and safety protocols in place at the venue.",
+// ];
 
 const EventPage = () => {
   return (

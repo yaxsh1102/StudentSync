@@ -40,6 +40,11 @@ const StudentSync = () => {
 
   useGetUser();
   const {isLoggedIn} = useContext(AppContext)
+  // if (isLoggedIn){
+  //   window.location.href='/'
+  // }else{
+  //   window.location.href='/login'
+  // }
 
   return (
     <>
@@ -50,15 +55,15 @@ const StudentSync = () => {
               <Route path="/" element={<Layout />}>
                 <Route path="" element={<LandingPage />} />
                 <Route path="home" element={<Suspense fallback={<Loading />}><Home /></Suspense>} />
-                <Route path="profile" element={<Suspense fallback={<Loading />}><Profile /></Suspense>} />
-                <Route path="edit-profile" element={<Suspense fallback={<Loading />}><EditProfile /></Suspense>} />
+                <Route path="profile/:param" element={<Suspense fallback={<Loading />}><Profile /></Suspense>} />
+                <Route path="edit-profile/:param" element={<Suspense fallback={<Loading />}><EditProfile /></Suspense>} />
                 <Route path="events" element={<Suspense fallback={<Loading />}><Events /></Suspense>} />
                 <Route path="eventDetails/:param" element={<Suspense fallback={<Loading />}><EventDetails /></Suspense>} />
                 <Route path="communities" element={<Suspense fallback={<Loading />}><Communities /></Suspense>} />
                 <Route path="chat" element={<Suspense fallback={<Loading />}><Chat /></Suspense>} />
                 <Route path="rooms" element={<Suspense fallback={<Loading />}><Rooms /></Suspense>} />
                 <Route path="dormitory" element={<Suspense fallback={<Loading />}><DormitoryPage /></Suspense>} />
-                <Route path="dormitoryDetails" element={<Suspense fallback={<Loading />}><DormitoryDetails /></Suspense>} />
+                <Route path="dormitoryDetails/:param" element={<Suspense fallback={<Loading />}><DormitoryDetails /></Suspense>} />
                 <Route path="roomDetails/:param" element={<Suspense fallback={<Loading />}><RoomDetails /></Suspense>} />
               </Route>
               <Route path="*" element={<Navigate to="/" />} />

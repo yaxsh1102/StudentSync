@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { User } from "lucide-react";
-import { useParams } from 'react-router-dom';
+import { useParams,Link} from 'react-router-dom';
 import axios from 'axios';
 
 // Mock Data for Room Details (this would typically be fetched from an API)
@@ -26,7 +26,7 @@ const [roomDetails,setRoomDetails] = useState({})
 const [owner,setOwner] = useState({})
 
 useEffect(()=>{
-  const getEventDetails =async ()=>{
+  const getRoomDetails =async ()=>{
   try{
     const res = await axios.post('http://localhost:8000/api/v1/getroomdetails/',{'id':param}) 
 
@@ -39,8 +39,8 @@ useEffect(()=>{
     console.log(err)
   }
 }
-getEventDetails()
-},[])
+getRoomDetails()
+},[param])
 
   return (
     <div className='flex flex-col h-full bg-gray-900 text-white'>
@@ -85,7 +85,7 @@ getEventDetails()
               <User className='text-yellow-400' size={32} />
               <div>
                 <p className='text-gray-400 mb-2'>
-                  <span className='font-semibold text-yellow-400'>Name:</span> {owner.name}
+                  <span className='font-semibold text-yellow-400' >Name :</span><Link className='hover:underline hover:text-slate-100' to={`/profile/${owner.id}`} > {owner.name}</Link>
                 </p>
                 <p className='text-gray-400 mb-2'>
                   <span className='font-semibold text-yellow-400'>Contact Email:</span> {owner.email}

@@ -5,10 +5,10 @@ import axios from "axios";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const { user, showToast } = useContext(AppContext);
+  const { user, setUser,showToast,setRefresher } = useContext(AppContext);
   const [formData, setFormData] = useState(user);
   const [profileImage, setProfileImage] = useState(null); 
-
+  const [errMsg,setErrMsg] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,20 +38,31 @@ const EditProfile = () => {
           "Content-Type": "multipart/form-data", 
         },
       });
-
-      showToast("Profile updated successfully!", "success");
-      navigate("/profile");
+      if (res.data.status===200){
+        setRefresher('')
+        showToast("Profile updated successfully!", "success");
+        setUser(formData)
+        navigate("/profile");
+      }else{
+        showToast(res.data.message);
+        setErrMsg(res.data.message)
+      }
     } catch (error) {
       showToast("Failed to update profile", "error");
       console.error("Profile update error:", error);
     }
   };
 
+  if (!formData){
+    return(<h1>Loading ... </h1>)
+  }
+
   return (
     <div id="edit-profile" className="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen flex items-center justify-center p-6">
       <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full">
         <div className="bg-gradient-to-r from-blue-500 to-blue-400 p-6 text-white">
           <h2 className="text-3xl font-extrabold">Edit Profile</h2>
+          <p className="text-red-800">{errMsg}</p>
         </div>
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
@@ -65,7 +76,6 @@ const EditProfile = () => {
               <InputField label="City" name="city" value={formData.city} onChange={handleChange} />
               <InputField label="State" name="state" value={formData.state} onChange={handleChange} />
               
-              {/* Profile Image Upload Field */}
               <div className="flex flex-col space-y-2">
                 <label className="text-slate-300 font-medium">Profile Image</label>
                 <input

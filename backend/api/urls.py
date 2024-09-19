@@ -17,6 +17,10 @@ urlpatterns = [
     path('getroomdetails/',GetRoomDetail.as_view()),
     path('getprofile/',ProfileView.as_view()),
     path('updateprofile/',UpdateProfileView.as_view()),
+    path('getdorms/',DormitoryView.as_view()),
+    path('createdorm/',CreateDormitoryView.as_view()),
+    path('deletedorm/',DeleteDormitoryView.as_view()),
+    path('getdormdetails/',GetDormitoryDetailsView.as_view()),
     
 ]
 

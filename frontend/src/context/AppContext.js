@@ -4,11 +4,12 @@ import { toast } from "react-hot-toast";
 export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentRoom, setCurrentRoom] = useState();
   const [currentDormitory, setCurrentDormitory] = useState();
   const [events,setEvents] = useState({})
+  const [refresher,setRefresher]=useState('')
 
   const showToast = (message, type = "success") => {
     const baseStyle = {
@@ -62,7 +63,8 @@ export default function AppContextProvider({ children }) {
     setCurrentDormitory,
     showToast, 
     events,
-    setEvents
+    setEvents,
+    setRefresher,
   };
 
   return (

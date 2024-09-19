@@ -12,7 +12,7 @@ import { AppContext } from "../context/AppContext";
 
 const Events = () => {
   const [eventsData,setEventsData] =useState({userEvents:[],upcoming:[],live:[],past:[]})
-  const {user} = useContext(AppContext) ;
+  const {user,setRefresher} = useContext(AppContext) ;
 
   useEffect(()=>{
     const getEvents = async ()=>{
@@ -35,7 +35,7 @@ const Events = () => {
       }
     }
     getEvents()
-  },[])
+  },[setRefresher])
 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
@@ -143,6 +143,7 @@ const Events = () => {
           })
 
         if (res.data.status===200){
+          setRefresher('')
           setShowForm(false)
 
           setEventsData((prevData) => ({

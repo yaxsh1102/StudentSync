@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import useGetUser from "../hooks/useGetUser";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const {user} = useContext(AppContext)
+
 
   const Menus = [
     { title: "Events", src: "calendar", path: "/events" },
     { title: "Communities", src: "chat", path: "/communities" },
     { title: "Dormitory", src: "home", path: "/dormitory" },
     { title: "Flatmate", src: "magnifier", path: "/rooms" },
-    { title: "Profile", src: "user", path: "/profile" },
+    { title: "Profile", src: "user", path: `/profile/${user.id}` },
   ];
 
   const handleNavigation = (path) => {

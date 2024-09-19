@@ -23,7 +23,7 @@ const EventDetails = () => {
     }
   }
   getEventDetails()
-  },[])
+  },[param])
 
 //   const event = {
 //     id: 1,

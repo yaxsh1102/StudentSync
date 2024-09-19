@@ -2,7 +2,7 @@ import {  Home,  Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
-const DormitoryCard = ({ name, address, capacity, description, isOwned, onDelete }) => {
+const DormitoryCard = ({ id,name, address, capacity, description, isOwned, onDelete }) => {
     const navigate  = useNavigate() 
     
     
@@ -21,7 +21,7 @@ const DormitoryCard = ({ name, address, capacity, description, isOwned, onDelete
         </div>
       )}
     </div>
-    <div onClick={()=>{navigate("/dormitoryDetails")}}>
+    <div onClick={()=>{navigate(`/dormitoryDetails/${id}`)}}>
     <h3 className="text-lg font-semibold text-white mb-1">{name}</h3>
     <p className="text-gray-400 text-sm mb-1">{address}</p>
     <p className="text-gray-400 text-sm mb-1">{description}</p>

@@ -16,7 +16,7 @@ const Rooms = () => {
     address:'',
   });
   const [photoPreview, setPhotoPreview] = useState("");
-  const {user,showToast} = useContext(AppContext) ;
+  const {user,showToast,setRefresher} = useContext(AppContext) ;
   const [roomsData, setRoomsData] = useState({userRoom:'',availableRooms:[]})
 
   useEffect(()=>{
@@ -40,7 +40,7 @@ const Rooms = () => {
       }
     }
     getRooms();
-  },[])
+  },[setRefresher])
 
   const filterRooms = (rooms) =>
     rooms.filter((room) =>
@@ -92,6 +92,7 @@ const Rooms = () => {
         })
 
         if (res.data.status===200){
+          setRefresher('')
           showToast("Room Added !")
           setShowForm(false);
           setFormValues({

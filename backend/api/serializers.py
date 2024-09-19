@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     otp = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['name','email','phone', 'password','birthdate','otp']
+        fields = ['id','name','email','phone', 'password','birthdate','otp']
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -61,7 +61,7 @@ class RoomSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields = ['name','phone', 'gender','birthdate','area','city','state','image']
+        fields = ['id','name','email','phone', 'gender','birthdate','area','city','state','image']
         
         def validate(self,data):
             if data['phone']:
@@ -69,3 +69,8 @@ class ProfileSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError("Contact Number is already in use.")
                 if  not len(str(data['phone']))==10:
                     raise serializers.ValidationError("Contact number must be 10 of digits")
+                
+class DormitorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Dormitory
+        fields=['id','name','address','capacity','description','image']

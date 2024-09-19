@@ -1,27 +1,49 @@
 import Navbar from '../components/Navbar';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const DormitoryDetails = () => {
-  const { showToast } = useContext(AppContext); // Access the showToast function from context
+  const { user,showToast } = useContext(AppContext); 
+  const {param} = useParams();
+  const [dormitory,setDormitory]= useState({})
+  const [owner,setOwner]= useState({})
 
-  const dormitory = {
-    name: 'Sunshine Dormitory',
-    address: '123 Sunshine Street, Gandhinagar, Gujarat',
-    capacity: '100 Students',
-    price: '₹5,000/month per person',
-    description:
-      'Sunshine Dormitory offers a comfortable and affordable living space for students. Located in the heart of Gandhinagar, the dormitory is within close proximity to major colleges and universities. Amenities include free Wi-Fi, a shared kitchen, study rooms, and recreational areas. It is the perfect place for students to focus on their studies while also enjoying a vibrant community life.',
-    images: [
-      'https://th.bing.com/th/id/OIP.L4wLfL2NIpyVHd1kfRjF-wHaE8?rs=1&pid=ImgDetMain',
-    ],
-    owner: {
-      name: 'Mr. Yash Patel',
-      phone: '+91 98765 43210',
-    },
-  };
+  useEffect(()=>{
+    const getDormDetails =async ()=>{
+      try{
+        const res = await axios.post(`http://localhost:8000/api/v1/getdormdetails/`,{'id':param})
 
-  // Function to handle the click event and show toast
+        if (res.data.status===200){
+          setDormitory(res.data.dormitory)
+          setOwner(res.data.owner)
+        }else{
+          showToast("Couldn't fetch dorm details");
+        }
+      }catch(err){
+        showToast('Error fetching dorm details'+err);
+      }
+    }
+    getDormDetails();
+  },[param])
+
+  // const dormitory = {
+  //   name: 'Sunshine Dormitory',
+  //   address: '123 Sunshine Street, Gandhinagar, Gujarat',
+  //   capacity: '100 Students',
+  //   price: '₹5,000/month per person',
+  //   description:
+  //     'Sunshine Dormitory offers a comfortable and affordable living space for students. Located in the heart of Gandhinagar, the dormitory is within close proximity to major colleges and universities. Amenities include free Wi-Fi, a shared kitchen, study rooms, and recreational areas. It is the perfect place for students to focus on their studies while also enjoying a vibrant community life.',
+  //   images: [
+  //     'https://th.bing.com/th/id/OIP.L4wLfL2NIpyVHd1kfRjF-wHaE8?rs=1&pid=ImgDetMain',
+  //   ],
+  //   owner: {
+  //     name: 'Mr. Yash Patel',
+  //     phone: '+91 98765 43210',
+  //   },
+  // };
+
   const handleAddressClick = () => {
     showToast(`Address: ${dormitory.address}`, 'info');
   };
@@ -37,14 +59,11 @@ const DormitoryDetails = () => {
           <h1 className='text-2xl md:text-4xl font-bold mb-4 text-yellow-400'>{dormitory.name}</h1>
 
           <div className='flex flex-wrap gap-4 md:gap-6'>
-            {dormitory.images.map((image, index) => (
               <img
-                key={index}
-                src={image}
-                alt={`Dormitory ${index + 1}`}
+                src={"http://localhost:8000/"+dormitory.image}
+                alt={`Dormitory ${dormitory.id }`}
                 className='w-full md:w-1/2 lg:w-1/3 h-48 md:h-64 object-cover rounded-lg border-2 border-yellow-400 shadow-lg'
               />
-            ))}
           </div>
 
           <div className='mt-4 md:mt-6'>
@@ -65,10 +84,10 @@ const DormitoryDetails = () => {
           <div className='mt-6 md:mt-8'>
             <h2 className='text-xl md:text-2xl font-semibold mb-2 text-yellow-400'>Owner Details</h2>
             <p className='text-base md:text-lg'>
-              <span className='font-semibold text-yellow-400'>Name:</span> {dormitory.owner.name}
+              <span className='font-semibold text-yellow-400'>Name:</span><Link className='hover:underline hover:text-slate-100' to={`/profile/${owner.id}`} > {owner.name}</Link>
             </p>
             <p className='text-base md:text-lg'>
-              <span className='font-semibold text-yellow-400'>Contact:</span> {dormitory.owner.phone}
+              <span className='font-semibold text-yellow-400'>Contact:</span> {owner.phone}
             </p>
           </div>
         </div>

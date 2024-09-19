@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
@@ -27,11 +27,32 @@ const DormitoryPage = () => {
 
   //call your useeffect api here
   const [photoPreview, setPhotoPreview] = useState("");
-  const { user } = useContext(AppContext);
+  const { user,showToast,setRefresher } = useContext(AppContext);
   const [dormitories, setDormitories] = useState({
     userDormitories: [],
     otherDormitories: [],
   });
+
+  useEffect(()=>{
+    const getDorms=async()=>{
+      try{
+        const res = await axios.post("http://localhost:8000/api/v1/getdorms/",{'email':user.email})
+
+        if (res.data.status===200){
+          setDormitories({
+            userDormitories:res.data.userDormitories,
+            otherDormitories:res.data.otherDormitories,
+          })
+        }else{
+          showToast("Couldn't fetch dormitories")
+        }
+      }catch(err){
+        showToast("Some Error occured while fetching dormitories")
+      }
+    }
+
+    getDorms();
+  },[setRefresher])
 
   const filterDormitories = (dormitories) =>
     dormitories.filter((dorm) =>
@@ -58,28 +79,17 @@ const DormitoryPage = () => {
 
     if (name && address && capacity && description && dormPhoto) {
       const formData = new FormData();
+      formData.append("email", user.email);
       formData.append("name", name);
       formData.append("address", address);
       formData.append("capacity", Number(capacity));
       formData.append("description", description);
-      formData.append("dormPhoto", dormPhoto);
+      formData.append("image", dormPhoto);
 
-      // const newDormitory = {
-      //   name,
-      //   address,
-      //   capacity: Number(capacity),
-      //   description,
-      //   dormPhoto,
-      // };
-
-      // // setDormitories((prevData) => ({
-      //   ...prevData,
-      //   userDormitories: [...prevData.userDormitories, newDormitory],
-      // }));
 
       try {
         const res = await axios.post(
-          "http://localhost:8000/api/v1/dormitories/",
+          "http://localhost:8000/api/v1/createdorm/",
           formData,
           {
             headers: {
@@ -89,7 +99,16 @@ const DormitoryPage = () => {
         );
 
         if (res.data.status === 200) {
-          console.log("Dormitory sent to backend");
+          setRefresher('')
+          showToast("Dormitory Added")
+
+          setFormValues({
+            name: "",
+            address: "",
+            capacity: "",
+            description: "",
+            dormPhoto: null,
+          })
 
           const newDormitory = {
             name,
@@ -126,10 +145,11 @@ const DormitoryPage = () => {
     //   userDormitories: prevData.userDormitories.filter((dorm) => dorm.id !== id),
     // }));
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/dormitories/${id}`);
+      const res = await axios.post(`http://localhost:8000/api/v1/deletedorm/`,{'id':id});
   
-      if (res.status === 200) {
+      if (res.data.status === 200) {
         console.log(`Dormitory with id ${id} deleted successfully`);
+        showToast("Dormitory deleted successfully !")
   
         setDormitories((prevData) => ({
           ...prevData,

@@ -1,17 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 
 const Profile = () => {
+  const {param}= useParams()
   const navigate = useNavigate();
   const {user,showToast} = useContext(AppContext) ;
-  const [profileData,setProfileData] = useState({})
+  const [profileData,setProfileData] = useState(user)
 
   useEffect(()=>{
     const getProfile = async ()=>{
       try{
-        const res = await axios.post('http://localhost:8000/api/v1/getprofile/',{'email':user.email})
+        const res = await axios.post('http://localhost:8000/api/v1/getprofile/',{'id':param})
 
         if (res.data.status===200){
           setProfileData(res.data.profile)
@@ -23,7 +24,13 @@ const Profile = () => {
       }
     }
     getProfile();
-  },[])
+  },[param])
+
+  // if (!profileData){
+  //   return (<LoaderIcon/>)
+  // }
+
+  const userPic ="C:\\Users\\91903\\Desktop\\Full-Stack Development\\StudentSync-Sem-4-GroupProject\\studentsync\\frontend\\public\\user.png"
 
   return (
     <div id="profile" className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center p-6">
@@ -31,7 +38,7 @@ const Profile = () => {
         <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-white">
           <div className="flex flex-col items-center">
             <img
-              src={"http://localhost:8000"+profileData.image}
+              src={profileData.image ? "http://localhost:8000"+profileData.image : userPic }
               alt={`${profileData.name}'s profile`}
               className="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl object-cover"
             />
@@ -51,12 +58,12 @@ const Profile = () => {
               value={profileData.phone}
             />
           </div>
-          <button
-            onClick={() => navigate('/edit-profile')}
+          {param==user.id && <button
+            onClick={() => navigate(`/edit-profile/${user.id}`)}
             className="mt-6 w-full py-2 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 transition-colors duration-200 ease-in-out"
           >
             Edit Profile
-          </button>
+          </button>}
         </div>
       </div>
     </div>
