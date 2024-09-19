@@ -1,11 +1,9 @@
-import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import { useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';
 import { AppContext } from '../context/AppContext';
 
 const useGetUser =()=>{
-    const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
+    const {user,setUser,setIsLoggedIn,showToast}=useContext(AppContext)
     
     useEffect(()=>{
 

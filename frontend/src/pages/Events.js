@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IoSearch } from "react-icons/io5";
-import { Search, Plus, Home, Edit, Trash2Icon } from "lucide-react";
+import { Search, Plus} from "lucide-react";
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import { useNavigate,Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from 'axios'
 
 import { AppContext } from "../context/AppContext";
@@ -37,7 +36,6 @@ const Events = () => {
     getEvents()
   },[setRefresher])
 
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({

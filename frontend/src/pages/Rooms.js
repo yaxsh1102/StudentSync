@@ -83,7 +83,6 @@ const Rooms = () => {
       };// edited data according to backend
 
 
-      //make the api calllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
       try{
         const res = await axios.post('http://localhost:8000/api/v1/createroom/',newRoom,{
           headers: {
@@ -147,7 +146,6 @@ const Rooms = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col px-8">
-      {/* Navbar */}
       <div className="bg-gray-900 p-4 flex justify-between items-center pl-24">
         <h1 className="text-2xl font-bold text-white">Find Roommates</h1>
         <div className="flex items-center space-x-4">

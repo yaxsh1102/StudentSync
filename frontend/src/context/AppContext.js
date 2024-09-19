@@ -64,6 +64,7 @@ export default function AppContextProvider({ children }) {
     showToast, 
     events,
     setEvents,
+    refresher,
     setRefresher,
   };
 

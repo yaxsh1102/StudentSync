@@ -6,11 +6,10 @@ import LandingPage from "./LandingPage";
 import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 import EditProfile from "../components/EditProfile";
-import { Toaster } from "react-hot-toast"; 
 import useGetUser from "../hooks/useGetUser";
 import { AppContext } from "../context/AppContext";
 
-const ErrorPage = lazy(() => import("./ErrorPage"));
+// const ErrorPage = lazy(() => import("./ErrorPage"));
 const Login = lazy(() => import("./Login"));
 const Profile = lazy(() => import("../components/Profile"));
 const Signup = lazy(() => import("./Signup"));
@@ -40,11 +39,6 @@ const StudentSync = () => {
 
   useGetUser();
   const {isLoggedIn} = useContext(AppContext)
-  // if (isLoggedIn){
-  //   window.location.href='/'
-  // }else{
-  //   window.location.href='/login'
-  // }
 
   return (
     <>

@@ -2,7 +2,6 @@ import React, { useContext, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios'
-import useGetUser from '../hooks/useGetUser';
 import { AppContext } from '../context/AppContext';
 
 
@@ -12,7 +11,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const emailPattern = '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$';
   const emailRegex = new RegExp(emailPattern);
-  const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
+  const {user,setIsLoggedIn,showToast}=useContext(AppContext)
 
   const handleGetOtp =async()=>{
     const email = inputRefs.current['email'].value;

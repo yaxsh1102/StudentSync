@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const DormitoryDetails = () => {
-  const { user,showToast } = useContext(AppContext); 
+  const { showToast } = useContext(AppContext); 
   const {param} = useParams();
   const [dormitory,setDormitory]= useState({})
   const [owner,setOwner]= useState({})
@@ -27,22 +27,6 @@ const DormitoryDetails = () => {
     }
     getDormDetails();
   },[param])
-
-  // const dormitory = {
-  //   name: 'Sunshine Dormitory',
-  //   address: '123 Sunshine Street, Gandhinagar, Gujarat',
-  //   capacity: '100 Students',
-  //   price: '₹5,000/month per person',
-  //   description:
-  //     'Sunshine Dormitory offers a comfortable and affordable living space for students. Located in the heart of Gandhinagar, the dormitory is within close proximity to major colleges and universities. Amenities include free Wi-Fi, a shared kitchen, study rooms, and recreational areas. It is the perfect place for students to focus on their studies while also enjoying a vibrant community life.',
-  //   images: [
-  //     'https://th.bing.com/th/id/OIP.L4wLfL2NIpyVHd1kfRjF-wHaE8?rs=1&pid=ImgDetMain',
-  //   ],
-  //   owner: {
-  //     name: 'Mr. Yash Patel',
-  //     phone: '+91 98765 43210',
-  //   },
-  // };
 
   const handleAddressClick = () => {
     showToast(`Address: ${dormitory.address}`, 'info');

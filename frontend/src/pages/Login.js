@@ -3,14 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
-import useGetUser from '../hooks/useGetUser';
 
 
 const Login = () => {
   const inputRefs = useRef({});
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const {user,setUser,isLoggedIn,setIsLoggedIn,showToast}=useContext(AppContext)
+  const {user,setIsLoggedIn,showToast}=useContext(AppContext)
 
   const handleLogin = async () => {
     try {

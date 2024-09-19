@@ -1,4 +1,4 @@
-import { Search, Plus, Home, Trash2, X } from 'lucide-react';
+import {  Home, Trash2 } from 'lucide-react';
 import { useNavigate,Link } from 'react-router-dom';
 
 

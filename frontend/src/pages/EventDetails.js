@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -25,31 +24,6 @@ const EventDetails = () => {
   getEventDetails()
   },[param])
 
-//   const event = {
-//     id: 1,
-//     title: "Indigenous Hackathon By DAIICT",
-//     image:
-//       "https://ieee-dataport.org/sites/default/files/styles/large/public/Hackathonimage_2.png?itok=YNRTjFmz",
-//     type: "Hackathon",
-//     date: "21/09/2024",
-//     time: "9:00 AM - 6:00 PM",
-//     venue:
-//       "Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar, Gujarat",
-//     desc: "Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.Join us for an exciting hackathon focused on building innovative solutions for indigenous communities.",
-//     organizer: "DAIICT Student Council",
-//     capacity: 200,
-//     registrationDeadline: "15/09/2024",
-//     prizes: [
-//       "1st Place : ₹50,000 and Internship Opportunities",
-//       "2nd Place : ₹30,000 and Mentorship Program",
-//       "3rd Place : ₹20,000 and Tech Gadgets",
-//     ],
-//     sponsors: [
-//       "TechCorp India",
-//       "InnovateNow Foundation",
-//       "Gujarat Innovation Society",
-//     ],
-//   };
   return (
     <div className="flex flex-col h-full bg-gray-900 text-white">
       <div className="fixed top-0 left-0 right-0 z-10 bg-gray-800 ">

@@ -4,22 +4,6 @@ import { User } from "lucide-react";
 import { useParams,Link} from 'react-router-dom';
 import axios from 'axios';
 
-// Mock Data for Room Details (this would typically be fetched from an API)
-// const roomDetails = {
-//   id: 1,
-//   building_name: "Oceanview Heights",
-//   persons_required: 3,
-//   address: "123 Seaside Blvd, Miami, FL",
-//   owner: {
-//     name: "John Doe",
-//     contact: "john.doe@example.com",
-//     phone: "+1 (555) 123-4567",
-//   },
-//   roomImages: [
-//     "https://th.bing.com/th/id/OIP.L4wLfL2NIpyVHd1kfRjF-wHaE8?rs=1&pid=ImgDetMain",
-//   ],
-// };
-
 const RoomDetails = () => {
 const{ param} = useParams()
 const [roomDetails,setRoomDetails] = useState({})

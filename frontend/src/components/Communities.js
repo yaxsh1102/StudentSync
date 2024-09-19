@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 const participants = [
   { name: "John Doe", email: "john@example.com", avatar: "/path/to/avatar1.jpg" },
   { name: "Jane Smith", email: "jane@example.com", avatar: "/path/to/avatar2.jpg" },
-  // Add more participants
 ];
 
 const Communities = () => {

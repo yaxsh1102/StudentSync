@@ -8,10 +8,6 @@ import { useContext } from "react";
 import axios from "axios";
 
 const DormitoryPage = () => {
-
-
-
-
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({

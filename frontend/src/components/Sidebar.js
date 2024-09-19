@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import useGetUser from "../hooks/useGetUser";
 
 const Sidebar = () => {
   const navigate = useNavigate();
