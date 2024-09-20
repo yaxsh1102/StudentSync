@@ -6,18 +6,22 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import Loading from "../components/Loading";
 
+
+
 const Rooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formValues, setFormValues] = useState({
+
     building_name: "",
     persons_required: "",
     details: "",
-    image: [],
+    image: '',
     address:'',
+
   });
   const [photoPreview, setPhotoPreview] = useState("");
-  const {user,showToast,setRefresher,loader,setLoader} = useContext(AppContext) ;
+  const {user,showToast,setRefresher,loader,setLoader,refresher} = useContext(AppContext) ;
   const [roomsData, setRoomsData] = useState({userRoom:'',availableRooms:[]})
 
   useEffect(()=>{
@@ -42,11 +46,14 @@ const Rooms = () => {
       }
     }
     getRooms();
-  },[setRefresher])
+  },[refresher])
 
   const filterRooms = (rooms) =>
     rooms.filter((room) =>
-      room.address.toLowerCase().includes(searchTerm.toLowerCase())
+      room.address.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      room.building_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(room.persons_required).includes(searchTerm.toLowerCase()) ||
+      room.details.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleInputChange = (e) => {
@@ -94,7 +101,7 @@ const Rooms = () => {
         })
 
         if (res.data.status===200){
-          setRefresher('')
+          setRefresher('rooms')
           showToast("Room Added !")
           setShowForm(false);
           setFormValues({

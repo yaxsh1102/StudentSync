@@ -8,6 +8,7 @@ import { useContext } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
 
+
 const DormitoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -19,12 +20,8 @@ const DormitoryPage = () => {
     dormPhoto: null,
   });
 
-
-
-
-  //call your useeffect api here
   const [photoPreview, setPhotoPreview] = useState("");
-  const { user,showToast,setRefresher,loader,setLoader } = useContext(AppContext);
+  const { user,showToast,setRefresher,loader,setLoader,refresher } = useContext(AppContext);
   const [dormitories, setDormitories] = useState({
     userDormitories: [],
     otherDormitories: [],
@@ -51,7 +48,7 @@ const DormitoryPage = () => {
     }
 
     getDorms();
-  },[setRefresher])
+  },[refresher])
 
   const filterDormitories = (dormitories) =>
     dormitories.filter((dorm) =>
@@ -99,7 +96,7 @@ const DormitoryPage = () => {
         );
 
         if (res.data.status === 200) {
-          setRefresher('')
+          setRefresher('dorms')
           showToast("Dormitory Added")
 
           setFormValues({

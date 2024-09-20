@@ -1,7 +1,7 @@
 from rest_framework.views import APIView 
 from rest_framework.response import Response 
 from rest_framework.permissions import AllowAny  
-from rest_framework import generics, status, permissions
+from rest_framework import status
 from django.http import JsonResponse
 from .serializers import *
 import requests
@@ -12,10 +12,7 @@ from django.utils import timezone
 from datetime import timedelta ,date
 import jwt  
 from django.conf import settings 
-from django.core.files.storage import default_storage
-import json
 from rest_framework.parsers import MultiPartParser, FormParser
-import os
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 def create_jwt(email):

@@ -16,14 +16,15 @@ const Communities = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const {user,loader,setLoader,showToast,setRefresher} = useContext(AppContext)
+  const {user,loader,setLoader,showToast,setRefresher,refresher} = useContext(AppContext)
   const [formValues, setFormValues] = useState({
-    name: "",
-    description: "",
-    image: "",
-    discord :'',
-    x:'',
-  });
+   name: "",
+  description: "",
+  image:'' ,
+  discord: "",
+  x: "",
+  }
+  );
   const [photoPreview, setPhotoPreview] = useState("");
   const [userCreatedCommunities,setUserCreatedCommunities]= useState([])
   const [allCommunities,setAllCommunities]= useState([])
@@ -49,105 +50,7 @@ const Communities = () => {
     }
     getCommunities();
     
-  },[setRefresher])
-  // const userJoinedCommunities = [
-  //   {
-  //     id: 1,
-  //     name: "Tech Innovators",
-  //     description: "Link community for discussing technology innovations.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/techinnovators",
-  //       facebook: "https://facebook.com/techinnovators",
-  //     },
-  //     user_id: [1, 2, 3],
-  //     messages: [
-  //       { user: "Alice", content: "Hey, how's everyone doing?" },
-  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Art Lovers",
-  //     description: "Link place to share and discuss art pieces.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/artlovers",
-  //       instagram: "https://instagram.com/artlovers",
-  //     },
-  //     user_id: [4, 5, 6],
-  //     messages: [
-  //       { user: "Eve", content: "Check out this new artwork I just made!" },
-  //       { user: "Dave", content: "Wow, that's beautiful!" },
-  //     ],
-  //   },
-  // ];
-
-  // const userCreatedCommunities = [
-  //   {
-  //     id: 1,
-  //     name: "Tech Innovators",
-  //     description: "Link community for discussing technology innovations.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/techinnovators",
-  //       facebook: "https://facebook.com/techinnovators",
-  //     },
-  //     user_id: [1, 2, 3],
-  //     messages: [
-  //       { user: "Alice", content: "Hey, how's everyone doing?" },
-  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Art Lovers",
-  //     description: "Link place to share and discuss art pieces.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/artlovers",
-  //       instagram: "https://instagram.com/artlovers",
-  //     },
-  //     user_id: [4, 5, 6],
-  //     messages: [
-  //       { user: "Eve", content: "Check out this new artwork I just made!" },
-  //       { user: "Dave", content: "Wow, that's beautiful!" },
-  //     ],
-  //   },
-  // ];
-
-  // const allCommunities = [
-  //   {
-  //     id: 1,
-  //     name: "Tech Innovators",
-  //     description: "Link community for discussing technology innovations.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/techinnovators",
-  //       facebook: "https://facebook.com/techinnovators",
-  //     },
-  //     user_id: [1, 2, 3],
-  //     messages: [
-  //       { user: "Alice", content: "Hey, how's everyone doing?" },
-  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Art Lovers",
-  //     description: "Link place to share and discuss art pieces.",
-  //     image: "https://via.placeholder.com/150",
-  //     discord: {
-  //       x: "https://x.com/artlovers",
-  //       instagram: "https://instagram.com/artlovers",
-  //     },
-  //     user_id: [4, 5, 6],
-  //     messages: [
-  //       { user: "Eve", content: "Check out this new artwork I just made!" },
-  //       { user: "Dave", content: "Wow, that's beautiful!" },
-  //     ],
-  //   },
-  // ];
+  },[refresher])
 
   const filterCommunities = (communities) =>
     communities.filter((community) =>
@@ -200,7 +103,7 @@ const Communities = () => {
           })
 
         if (res.data.status===200){
-          setRefresher('')
+          setRefresher('community')
           setUserCreatedCommunities([...userCreatedCommunities,newCommunity])
           setShowForm(false);
           setFormValues({
@@ -401,7 +304,7 @@ const Communities = () => {
                   <div className="mt-2 space-x-2 text-white"> Links : 
                   <Link
                       to={community.discord}
-                      className="text-yellow-400 hover:text-yellow-300 pl-10"
+                      className="text-yellow-400 hover:text-yellow-300 pl-10 hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -409,7 +312,7 @@ const Communities = () => {
                     </Link>
                     <Link
                       to={community.x}
-                      className="text-yellow-400 hover:text-yellow-300 pl-10"
+                      className="text-yellow-400 hover:text-yellow-300 pl-10 hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -446,7 +349,7 @@ const Communities = () => {
                     Links : 
                     <Link
                       to={community.discord}
-                      className="text-yellow-400 hover:text-yellow-300 pl-10"
+                      className="text-yellow-400 hover:text-yellow-300 pl-10 hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -454,7 +357,7 @@ const Communities = () => {
                     </Link>
                     <Link
                       to={community.x}
-                      className="text-yellow-400 hover:text-yellow-300 pl-10"
+                      className="text-yellow-400 hover:text-yellow-300 pl-10 hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >

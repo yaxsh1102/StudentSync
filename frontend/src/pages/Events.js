@@ -12,7 +12,7 @@ import Loading from "../components/Loading";
 
 const Events = () => {
   const [eventsData,setEventsData] =useState({userEvents:[],upcoming:[],live:[],past:[]})
-  const {user,setRefresher,loader,setLoader} = useContext(AppContext) ;
+  const {user,setRefresher,refresher,loader,setLoader} = useContext(AppContext) ;
 
  
 
@@ -40,11 +40,13 @@ const Events = () => {
       }
     }
     getEvents()
-  },[])
+  },[refresher])
+
+
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState( {
     title: "",
     image: "",
     type: "",
@@ -148,7 +150,7 @@ const Events = () => {
           })
 
         if (res.data.status===200){
-          setRefresher('')
+          setRefresher('event')
           setShowForm(false)
 
           setEventsData((prevData) => ({
@@ -156,6 +158,21 @@ const Events = () => {
             userEvents: [...prevData.userEvents, newEvent],
           }));  
           setLoader(false)
+          setFormValues(  {
+            title: "",
+            image: "",
+            type: "",
+            date: "",
+            time: "",
+            venue: "",
+            description: "",
+            organizer: "",
+            capacity: "",
+            registrationDeadline: "",
+            prizes:'',
+            sponsors: "",
+          })
+          setPhotoPreview('')
           }else{
           console.log("Couldn't send data ")
         }
@@ -223,9 +240,9 @@ const Events = () => {
               <label className="block text-white">Title</label>
               <input
                 type="text"
-                name="title"
+                title="title"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.name}
+                value={formValues.title}
                 onChange={handleInputChange}
                 required
               />

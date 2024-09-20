@@ -47,11 +47,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
     
 class EventSerializer(serializers.ModelSerializer):
-    # user=UserSerializer()
     class Meta:
         model = Event
         fields = ['id','title','image','type','date','time','venue','description','organizer','capacity','deadline','prizes','sponsors']
-        
         
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
