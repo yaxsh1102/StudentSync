@@ -10,6 +10,7 @@ export default function AppContextProvider({ children }) {
   const [currentDormitory, setCurrentDormitory] = useState();
   const [events,setEvents] = useState({})
   const [refresher,setRefresher]=useState('')
+  const [loader,setLoader] = useState(false)
 
   const showToast = (message, type = "success") => {
     const baseStyle = {
@@ -66,6 +67,8 @@ export default function AppContextProvider({ children }) {
     setEvents,
     refresher,
     setRefresher,
+    loader,
+    setLoader,
   };
 
   return (

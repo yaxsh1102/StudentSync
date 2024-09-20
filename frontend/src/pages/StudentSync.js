@@ -47,7 +47,6 @@ const StudentSync = () => {
           {isLoggedIn ? (
             <>
               <Route path="/" element={<Layout />}>
-                <Route path="" element={<LandingPage />} />
                 <Route path="home" element={<Suspense fallback={<Loading />}><Home /></Suspense>} />
                 <Route path="profile/:param" element={<Suspense fallback={<Loading />}><Profile /></Suspense>} />
                 <Route path="edit-profile/:param" element={<Suspense fallback={<Loading />}><EditProfile /></Suspense>} />
@@ -60,10 +59,11 @@ const StudentSync = () => {
                 <Route path="dormitoryDetails/:param" element={<Suspense fallback={<Loading />}><DormitoryDetails /></Suspense>} />
                 <Route path="roomDetails/:param" element={<Suspense fallback={<Loading />}><RoomDetails /></Suspense>} />
               </Route>
-              <Route path="*" element={<Navigate to="/" />} />
+              {/* <Route path="*" element={<Navigate to="/home" />} /> */}
             </>
           ) : (
             <>
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Suspense fallback={<Loading />}><Login /></Suspense>} />
               <Route path="/signup" element={<Suspense fallback={<Loading />}><Signup /></Suspense>} />
               {/* <Route path="*" element={<Navigate to="/login" />} /> */}

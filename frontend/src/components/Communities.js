@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { Search, Plus } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
+import { Search, Plus, Trash2 } from "lucide-react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import Loading from "./Loading";
 
 const participants = [
   { name: "John Doe", email: "john@example.com", avatar: "/path/to/avatar1.jpg" },
@@ -13,118 +16,143 @@ const Communities = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const {user,loader,setLoader,showToast,setRefresher} = useContext(AppContext)
   const [formValues, setFormValues] = useState({
     name: "",
-    desc: "",
+    description: "",
     image: "",
-    social_links: [],
-    messages: [],
+    discord :'',
+    x:'',
   });
   const [photoPreview, setPhotoPreview] = useState("");
+  const [userCreatedCommunities,setUserCreatedCommunities]= useState([])
+  const [allCommunities,setAllCommunities]= useState([])
 
-  const userJoinedCommunities = [
-    {
-      id: 1,
-      name: "Tech Innovators",
-      desc: "Link community for discussing technology innovations.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/techinnovators",
-        facebook: "https://facebook.com/techinnovators",
-      },
-      user_id: [1, 2, 3],
-      messages: [
-        { user: "Alice", content: "Hey, how's everyone doing?" },
-        { user: "Bob", content: "Doing great! Excited for the next meetup." },
-      ],
-    },
-    {
-      id: 2,
-      name: "Art Lovers",
-      desc: "Link place to share and discuss art pieces.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/artlovers",
-        instagram: "https://instagram.com/artlovers",
-      },
-      user_id: [4, 5, 6],
-      messages: [
-        { user: "Eve", content: "Check out this new artwork I just made!" },
-        { user: "Dave", content: "Wow, that's beautiful!" },
-      ],
-    },
-  ];
+  useEffect(()=>{
+    const getCommunities=async()=>{
+      setLoader(true)
+      try{
+        const res = await axios.post('http://localhost:8000/api/v1/getcommunities/',{'email':user.email})
 
-  const userCreatedCommunities = [
-    {
-      id: 1,
-      name: "Tech Innovators",
-      desc: "Link community for discussing technology innovations.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/techinnovators",
-        facebook: "https://facebook.com/techinnovators",
-      },
-      user_id: [1, 2, 3],
-      messages: [
-        { user: "Alice", content: "Hey, how's everyone doing?" },
-        { user: "Bob", content: "Doing great! Excited for the next meetup." },
-      ],
-    },
-    {
-      id: 2,
-      name: "Art Lovers",
-      desc: "Link place to share and discuss art pieces.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/artlovers",
-        instagram: "https://instagram.com/artlovers",
-      },
-      user_id: [4, 5, 6],
-      messages: [
-        { user: "Eve", content: "Check out this new artwork I just made!" },
-        { user: "Dave", content: "Wow, that's beautiful!" },
-      ],
-    },
-  ];
+        if (res.data.status===200){
+          setUserCreatedCommunities(res.data.userCreatedCommunities || []);
+          setAllCommunities(res.data.allCommunities || [])
+          setLoader(false)
+          console.log(userCreatedCommunities)
+          console.log(allCommunities)
+        }else{
+          showToast("Couldn't fetch communities")
+        }
+      }catch(err){
+        showToast("some error occured while fetching communities "+err)
+      }
+    }
+    getCommunities();
+    
+  },[setRefresher])
+  // const userJoinedCommunities = [
+  //   {
+  //     id: 1,
+  //     name: "Tech Innovators",
+  //     description: "Link community for discussing technology innovations.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/techinnovators",
+  //       facebook: "https://facebook.com/techinnovators",
+  //     },
+  //     user_id: [1, 2, 3],
+  //     messages: [
+  //       { user: "Alice", content: "Hey, how's everyone doing?" },
+  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Art Lovers",
+  //     description: "Link place to share and discuss art pieces.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/artlovers",
+  //       instagram: "https://instagram.com/artlovers",
+  //     },
+  //     user_id: [4, 5, 6],
+  //     messages: [
+  //       { user: "Eve", content: "Check out this new artwork I just made!" },
+  //       { user: "Dave", content: "Wow, that's beautiful!" },
+  //     ],
+  //   },
+  // ];
 
-  const allCommunities = [
-    {
-      id: 1,
-      name: "Tech Innovators",
-      desc: "Link community for discussing technology innovations.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/techinnovators",
-        facebook: "https://facebook.com/techinnovators",
-      },
-      user_id: [1, 2, 3],
-      messages: [
-        { user: "Alice", content: "Hey, how's everyone doing?" },
-        { user: "Bob", content: "Doing great! Excited for the next meetup." },
-      ],
-    },
-    {
-      id: 2,
-      name: "Art Lovers",
-      desc: "Link place to share and discuss art pieces.",
-      image: "https://via.placeholder.com/150",
-      social_links: {
-        twitter: "https://twitter.com/artlovers",
-        instagram: "https://instagram.com/artlovers",
-      },
-      user_id: [4, 5, 6],
-      messages: [
-        { user: "Eve", content: "Check out this new artwork I just made!" },
-        { user: "Dave", content: "Wow, that's beautiful!" },
-      ],
-    },
-  ];
+  // const userCreatedCommunities = [
+  //   {
+  //     id: 1,
+  //     name: "Tech Innovators",
+  //     description: "Link community for discussing technology innovations.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/techinnovators",
+  //       facebook: "https://facebook.com/techinnovators",
+  //     },
+  //     user_id: [1, 2, 3],
+  //     messages: [
+  //       { user: "Alice", content: "Hey, how's everyone doing?" },
+  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Art Lovers",
+  //     description: "Link place to share and discuss art pieces.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/artlovers",
+  //       instagram: "https://instagram.com/artlovers",
+  //     },
+  //     user_id: [4, 5, 6],
+  //     messages: [
+  //       { user: "Eve", content: "Check out this new artwork I just made!" },
+  //       { user: "Dave", content: "Wow, that's beautiful!" },
+  //     ],
+  //   },
+  // ];
+
+  // const allCommunities = [
+  //   {
+  //     id: 1,
+  //     name: "Tech Innovators",
+  //     description: "Link community for discussing technology innovations.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/techinnovators",
+  //       facebook: "https://facebook.com/techinnovators",
+  //     },
+  //     user_id: [1, 2, 3],
+  //     messages: [
+  //       { user: "Alice", content: "Hey, how's everyone doing?" },
+  //       { user: "Bob", content: "Doing great! Excited for the next meetup." },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Art Lovers",
+  //     description: "Link place to share and discuss art pieces.",
+  //     image: "https://via.placeholder.com/150",
+  //     discord: {
+  //       x: "https://x.com/artlovers",
+  //       instagram: "https://instagram.com/artlovers",
+  //     },
+  //     user_id: [4, 5, 6],
+  //     messages: [
+  //       { user: "Eve", content: "Check out this new artwork I just made!" },
+  //       { user: "Dave", content: "Wow, that's beautiful!" },
+  //     ],
+  //   },
+  // ];
 
   const filterCommunities = (communities) =>
     communities.filter((community) =>
       community.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,45 +163,93 @@ const Communities = () => {
     const file = e.target.files[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setFormValues({ ...formValues, dormPhotos: [file] });
+      setFormValues({ ...formValues, image: file });
       setPhotoPreview(preview);
     }
   };
 
-  const handleCreateCommunity = () => {
-    const { name, desc, image, social_links, messages } = formValues;
+  const handleCreateCommunity = async() => {
+    const { name, description, image, discord,x } = formValues;
+  
+    if (name && description && image && discord && x) {
 
-    if (name && desc && image && social_links && messages === 1) {
-      const newCommunity = {
-        id: Date.now(),
-        name,
-        desc,
-        image,
-        social_links,
-        messages,
-      };
-      console.log("New community added:", newCommunity);
-      setShowForm(false);
-      setFormValues({
-        name: "",
-        desc: "",
-        image: "",
-        social_links: [],
-        messages: [],
-      });
-      setPhotoPreview("");
+      const newCommunity={
+        name:name,
+        description:description,
+        image:image,
+        discord:discord,
+        x:x,
+      }
+
+      const formData = new FormData();
+  
+      formData.append('email', user.email);
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('image', image); 
+      formData.append('discord', discord);
+      formData.append('x', x);
+      
+      try{
+        setLoader(true)
+        const res = await axios.post('http://localhost:8000/api/v1/createcommunity/', formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
+
+        if (res.data.status===200){
+          setRefresher('')
+          setUserCreatedCommunities([...userCreatedCommunities,newCommunity])
+          setShowForm(false);
+          setFormValues({
+            name: "",
+            description: "",
+            image: "",
+            discord: '',
+            x: '',
+          });
+          setPhotoPreview("");
+          showToast("Community Added Successfully !")
+          setLoader(false)
+          }else{
+          showToast("Couldn't create Community")
+        }
+      }
+      catch(err){
+        showToast("Some error occured while creating Community "+err)
+      }
+  
+      
     } else {
+      console.log(formValues)
       alert("Please fill all fields and upload one photo.");
     }
   };
+  
 
-  const handleEdit = (id) => {
-    console.log(`Edit community with id: ${id}`);
+  const handleDelete = async(id) => {
+    try{
+      setLoader(true)
+      const res = await axios.post('http://localhost:8000/api/v1/deletecommunity/', {'id':id})
+
+      if (res.data.status===200){
+        setRefresher('')
+        setUserCreatedCommunities(userCreatedCommunities.filter((com)=>id!==com.id))
+        setLoader(false)
+        }else{
+        showToast("Couldn't delete Community")
+      }
+    }
+    catch(err){
+      showToast("Some error occured while deleting Community "+err)
+    }
   };
 
-  const handleDelete = (id) => {
-    console.log(`Delete community with id: ${id}`);
-  };
+  if (loader){
+    return(<Loading/>)
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col pl-24 px-8">
@@ -232,9 +308,9 @@ const Communities = () => {
               <label className="block text-white">Description</label>
               <textarea
                 type="text"
-                name="desc"
+                name="description"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.desc}
+                value={formValues.description}
                 onChange={handleInputChange}
                 rows={3}
                 required
@@ -262,11 +338,21 @@ const Communities = () => {
               </div>
             </div>
             <div>
-              <label className="block text-white">Social Links</label>{" "}
+              <label className="block text-white">Discord</label>{" "}
               <input
-                name="social_links"
+                name="discord"
                 className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
-                value={formValues.social_links}
+                value={formValues.discord}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-white">X</label>{" "}
+              <input
+                name="x"
+                className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-4"
+                value={formValues.x}
                 onChange={handleInputChange}
                 required
               />
@@ -292,81 +378,42 @@ const Communities = () => {
             {filterCommunities(userCreatedCommunities).map((community) => (
               <div
                 key={community.id}
-                onClick={() => navigate("/chat")}
                 className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
               >
+                
                 <img
-                  src={community.image}
+                  src={"http://localhost:8000"+community.image }
                   alt={community.name}
                   className="w-16 h-16 rounded-full mr-4"
                 />
-                <div>
+                <div className="w-full">
+                <div  className="flex w-full justify-between">
                   <h3 className="text-xl font-semibold text-white">
-                    {community.name}
+                    {community.name} 
                   </h3>
-                  <p className="text-gray-400">{community.desc}</p>
-                  <div className="mt-2 space-x-2">
-                  <Link
-                      to={community.social_links.discord}
-                      className="text-yellow-400 hover:text-yellow-300"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Discord
-                    </Link>
-                    <Link
-                      to={community.social_links.twitter}
-                      className="text-yellow-400 hover:text-yellow-300"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Twitter
-                    </Link>
+                  <span className="flex space-x-2">
+                      <button onClick={()=>{handleDelete(community.id)}} className="text-red-400 hover:text-red-300 inline">
+                        <Trash2 size={18} />
+                      </button>
+                    </span>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Joined Communities */}
-        <div>
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">
-            Joined Communities
-          </h2>
-          <div className="space-y-6">
-            {filterCommunities(userJoinedCommunities).map((community) => (
-              <div
-                key={community.id}
-                onClick={() => navigate("/chat")}
-                className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
-              >
-                <img
-                  src={community.image}
-                  alt={community.name}
-                  className="w-16 h-16 rounded-full mr-4"
-                />
-                <div>
-                  <h3 className="text-xl font-semibold text-white">
-                    {community.name}
-                  </h3>
-                  <p className="text-gray-400">{community.desc}</p>
-                  <div className="mt-2 space-x-2">
+                  <p className="text-gray-400">{community.description}</p>
+                  <div className="mt-2 space-x-2 text-white"> Links : 
                   <Link
-                      to={community.social_links.discord}
-                      className="text-yellow-400 hover:text-yellow-300"
+                      to={community.discord}
+                      className="text-yellow-400 hover:text-yellow-300 pl-10"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Discord
                     </Link>
                     <Link
-                      to={community.social_links.twitter}
-                      className="text-yellow-400 hover:text-yellow-300"
+                      to={community.x}
+                      className="text-yellow-400 hover:text-yellow-300 pl-10"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Twitter
+                      X
                     </Link>
                   </div>
                 </div>
@@ -383,11 +430,10 @@ const Communities = () => {
             {filterCommunities(allCommunities).map((community) => (
               <div
                 key={community.id}
-                onClick={() => navigate("/community")}
                 className="bg-gray-800 p-6 rounded-lg shadow-md flex items-center cursor-pointer"
               >
                 <img
-                  src={community.image}
+                  src={"http://localhost:8000"+community.image}
                   alt={community.name}
                   className="w-16 h-16 rounded-full mr-4"
                 />
@@ -395,23 +441,24 @@ const Communities = () => {
                   <h3 className="text-xl font-semibold text-white">
                     {community.name}
                   </h3>
-                  <p className="text-gray-400">{community.desc}</p>
-                  <div className="mt-2 space-x-2">
+                  <p className="text-gray-400">{community.description}</p>
+                  <div className="mt-2 space-x-2 text-white">
+                    Links : 
                     <Link
-                      to={community.social_links.discord}
-                      className="text-yellow-400 hover:text-yellow-300"
+                      to={community.discord}
+                      className="text-yellow-400 hover:text-yellow-300 pl-10"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Discord
                     </Link>
                     <Link
-                      to={community.social_links.twitter}
-                      className="text-yellow-400 hover:text-yellow-300"
+                      to={community.x}
+                      className="text-yellow-400 hover:text-yellow-300 pl-10"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Twitter
+                      X
                     </Link>
                   </div>
                 </div>

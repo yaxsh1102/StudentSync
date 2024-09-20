@@ -2,20 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
+import Loading from "./Loading";
 
 const Profile = () => {
   const {param}= useParams()
   const navigate = useNavigate();
-  const {user,showToast} = useContext(AppContext) ;
+  const {user,showToast,loader,setLoader} = useContext(AppContext) ;
   const [profileData,setProfileData] = useState(user)
 
   useEffect(()=>{
     const getProfile = async ()=>{
+      setLoader(true)
       try{
         const res = await axios.post('http://localhost:8000/api/v1/getprofile/',{'id':param})
 
         if (res.data.status===200){
           setProfileData(res.data.profile)
+          setLoader(false)
         }else{
           showToast("Couldn't fetch Profile")
         }
@@ -26,11 +29,11 @@ const Profile = () => {
     getProfile();
   },[param])
 
-  // if (!profileData){
-  //   return (<LoaderIcon/>)
-  // }
+  // const userPic ="C:\\Users\\91903\\Desktop\\Full-Stack Development\\StudentSync-Sem-4-GroupProject\\studentsync\\frontend\\public\\user.png"
 
-  const userPic ="C:\\Users\\91903\\Desktop\\Full-Stack Development\\StudentSync-Sem-4-GroupProject\\studentsync\\frontend\\public\\user.png"
+  if (loader){
+    return(<Loading/>)
+  }
 
   return (
     <div id="profile" className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center p-6">
@@ -38,7 +41,7 @@ const Profile = () => {
         <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-white">
           <div className="flex flex-col items-center">
             <img
-              src={profileData.image ? "http://localhost:8000"+profileData.image : userPic }
+              src={profileData.image ? "http://localhost:8000"+profileData.image : "user.png" }
               alt={`${profileData.name}'s profile`}
               className="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl object-cover"
             />

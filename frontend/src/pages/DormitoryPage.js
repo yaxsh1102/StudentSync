@@ -6,6 +6,7 @@ import DormitoryCard from "../components/DormitoryCard";
 import { AppContext } from "../context/AppContext";
 import { useContext } from "react";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const DormitoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,7 +24,7 @@ const DormitoryPage = () => {
 
   //call your useeffect api here
   const [photoPreview, setPhotoPreview] = useState("");
-  const { user,showToast,setRefresher } = useContext(AppContext);
+  const { user,showToast,setRefresher,loader,setLoader } = useContext(AppContext);
   const [dormitories, setDormitories] = useState({
     userDormitories: [],
     otherDormitories: [],
@@ -31,6 +32,7 @@ const DormitoryPage = () => {
 
   useEffect(()=>{
     const getDorms=async()=>{
+      setLoader(true)
       try{
         const res = await axios.post("http://localhost:8000/api/v1/getdorms/",{'email':user.email})
 
@@ -39,6 +41,7 @@ const DormitoryPage = () => {
             userDormitories:res.data.userDormitories,
             otherDormitories:res.data.otherDormitories,
           })
+          setLoader(false)
         }else{
           showToast("Couldn't fetch dormitories")
         }
@@ -84,6 +87,7 @@ const DormitoryPage = () => {
 
 
       try {
+        setLoader(true)
         const res = await axios.post(
           "http://localhost:8000/api/v1/createdorm/",
           formData,
@@ -105,6 +109,7 @@ const DormitoryPage = () => {
             description: "",
             dormPhoto: null,
           })
+          
 
           const newDormitory = {
             name,
@@ -118,6 +123,7 @@ const DormitoryPage = () => {
             ...prevData,
             userDormitories: [...prevData.userDormitories, newDormitory],
           }));
+          setLoader(false)
         } else {
           console.log("Couldn't send data");
         }
@@ -160,6 +166,9 @@ const DormitoryPage = () => {
     }
   };
   
+  if (loader){
+    return(<Loading/>)
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col pl-24">

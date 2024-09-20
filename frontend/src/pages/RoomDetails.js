@@ -1,22 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { User } from "lucide-react";
 import { useParams,Link} from 'react-router-dom';
 import axios from 'axios';
+import { AppContext } from '../context/AppContext';
+import Loading from '../components/Loading';
 
 const RoomDetails = () => {
 const{ param} = useParams()
 const [roomDetails,setRoomDetails] = useState({})
 const [owner,setOwner] = useState({})
+const {loader,setLoader} =useContext(AppContext)
 
 useEffect(()=>{
   const getRoomDetails =async ()=>{
+    setLoader(true)
   try{
     const res = await axios.post('http://localhost:8000/api/v1/getroomdetails/',{'id':param}) 
 
     if (res.data.status===200){
       setRoomDetails(res.data.event)
       setOwner(res.data.owner)
+      setLoader(false)
     }
   }
   catch(err){
@@ -25,6 +30,10 @@ useEffect(()=>{
 }
 getRoomDetails()
 },[param])
+
+if (loader){
+  return(<Loading/>)
+}
 
   return (
     <div className='flex flex-col h-full bg-gray-900 text-white'>

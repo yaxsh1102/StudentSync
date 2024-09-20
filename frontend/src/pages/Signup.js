@@ -81,7 +81,7 @@ const Signup = () => {
         localStorage.setItem('jwt',response.data.jwt)
         showToast("Welcome , "+user.name)
         
-        navigate('/');
+        navigate('/home');
       }
 
     } catch (error) {

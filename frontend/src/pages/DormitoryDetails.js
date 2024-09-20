@@ -3,21 +3,24 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Loading from '../components/Loading';
 
 const DormitoryDetails = () => {
-  const { showToast } = useContext(AppContext); 
+  const { showToast,loader,setLoader } = useContext(AppContext); 
   const {param} = useParams();
   const [dormitory,setDormitory]= useState({})
   const [owner,setOwner]= useState({})
 
   useEffect(()=>{
     const getDormDetails =async ()=>{
+      setLoader(true)
       try{
         const res = await axios.post(`http://localhost:8000/api/v1/getdormdetails/`,{'id':param})
 
         if (res.data.status===200){
           setDormitory(res.data.dormitory)
           setOwner(res.data.owner)
+          setLoader(false)
         }else{
           showToast("Couldn't fetch dorm details");
         }
@@ -31,6 +34,10 @@ const DormitoryDetails = () => {
   const handleAddressClick = () => {
     showToast(`Address: ${dormitory.address}`, 'info');
   };
+
+  if (loader){
+    return(<Loading/>)
+  }
 
   return (
     <div className='flex flex-col h-full bg-gray-900 text-white'>

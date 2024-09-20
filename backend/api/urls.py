@@ -21,6 +21,9 @@ urlpatterns = [
     path('createdorm/',CreateDormitoryView.as_view()),
     path('deletedorm/',DeleteDormitoryView.as_view()),
     path('getdormdetails/',GetDormitoryDetailsView.as_view()),
+    path('getcommunities/',CommunityView.as_view()),
+    path('createcommunity/',CreateCommunityView.as_view()),
+    path('deletecommunity/',DeleteCommunityView.as_view()),
     
 ]
 

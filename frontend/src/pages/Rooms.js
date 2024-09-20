@@ -4,6 +4,7 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import RoomCard from "../components/RoomCard";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const Rooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,11 +17,12 @@ const Rooms = () => {
     address:'',
   });
   const [photoPreview, setPhotoPreview] = useState("");
-  const {user,showToast,setRefresher} = useContext(AppContext) ;
+  const {user,showToast,setRefresher,loader,setLoader} = useContext(AppContext) ;
   const [roomsData, setRoomsData] = useState({userRoom:'',availableRooms:[]})
 
   useEffect(()=>{
     const getRooms=async()=>{
+      setLoader(true)
       try{
         const res = await axios.post('http://localhost:8000/api/v1/getrooms/',{'email':user.email})
 
@@ -30,7 +32,7 @@ const Rooms = () => {
             availableRooms:res.data.availableRooms,
           })
           console.log(res.data.availableRooms[0].building_name)
-          // console.log(roomsData)
+          setLoader(false)
         }
         else{
           console.log("error fetching rooms")
@@ -84,6 +86,7 @@ const Rooms = () => {
 
 
       try{
+        setLoader(true)
         const res = await axios.post('http://localhost:8000/api/v1/createroom/',newRoom,{
           headers: {
             "Content-Type": "multipart/form-data",
@@ -101,6 +104,7 @@ const Rooms = () => {
             image: [],
           });
           setPhotoPreview("");
+          setLoader(false)
         }
         else{
           showToast("Error Occured while Adding room ")
@@ -140,9 +144,11 @@ const Rooms = () => {
     }catch(err){
       console.log("Error while Deleting Room : "+err)
     }
-      
-    
   };
+
+  if (loader){
+    return(<Loading/>)
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col px-8">

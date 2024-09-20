@@ -74,3 +74,14 @@ class DormitorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Dormitory
         fields=['id','name','address','capacity','description','image']
+        
+class CommunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
+        fields = ['id', 'name', 'description', 'image', 'discord','x']
+
+
+class GetInTouchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=GetInTouch
+        fields ="__all__"

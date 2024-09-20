@@ -31,7 +31,7 @@ const Login = () => {
         setIsLoggedIn(true)
         localStorage.setItem('jwt',response.data.jwt)
         showToast("Welcome , "+user.name)
-        navigate('/');
+        navigate('/home');
       }
       else{
         setError("Some Error Occured while Logging IN")
@@ -58,7 +58,7 @@ const Login = () => {
         setIsLoggedIn(true)
         localStorage.setItem('jwt',response.data.jwt)
         showToast("Welcome , "+user.name)
-        navigate('/');
+        navigate('/home');
       }
 
     } catch (error) {

@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const useGetUser =()=>{
-    const {user,setUser,setIsLoggedIn,showToast}=useContext(AppContext)
+    const {user,setUser,setIsLoggedIn,showToast,setLoader}=useContext(AppContext)
     
     useEffect(()=>{
 
@@ -28,7 +28,7 @@ const useGetUser =()=>{
                     setTimeout(() => {
                         localStorage.removeItem("jwt");
                         showToast("Session expired, please log in again.");
-                        window.location.href='/login'
+                        window.location.href='/'
                     }, timeout);
                 }
             }
@@ -39,15 +39,24 @@ const useGetUser =()=>{
 
         console.log(email)
         if (email){
-            setIsLoggedIn(true)
+            setLoader(true)
             // window.location.href='/'
             try{
                 const response = await axios.post('http://localhost:8000/api/v1/getuserdata/',{'email':email})
-                setUser(response.data.user)
-                console.log(user)
+
+                if (response.data.status===200){
+                    setUser(response.data.user)
+                    setIsLoggedIn(true)
+                    setLoader(false)
+                    console.log(user)
+                }else{
+                    setIsLoggedIn(false)
+                    setLoader(false)
+                }
             }
             catch(err){
-                console.log(err)
+                setIsLoggedIn(false)
+                    setLoader(false)
             }
         }
         }

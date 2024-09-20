@@ -71,3 +71,22 @@ class Dormitory(models.Model):
     
     def __str__(self):
         return self.name
+    
+class Community(models.Model):
+    creator = models.ForeignKey(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=250)
+    description = models.TextField()
+    image = models.ImageField(upload_to='community/')
+    discord = models.CharField( max_length=400) 
+    x = models.CharField( max_length=400) 
+    
+    def __str__(self):
+        return self.name 
+
+class GetInTouch(models.Model):
+    email = models.EmailField()
+    name = models.CharField(max_length=250)
+    message = models.TextField(max_length=250)
+    
+    def __str__(self):
+        return self.name 

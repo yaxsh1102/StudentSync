@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { LogOut, LogOutIcon } from "lucide-react";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const {user} = useContext(AppContext)
+  const {user,setIsLoggedIn} = useContext(AppContext)
 
 
   const Menus = [
@@ -14,9 +15,14 @@ const Sidebar = () => {
     { title: "Dormitory", src: "home", path: "/dormitory" },
     { title: "Flatmate", src: "magnifier", path: "/rooms" },
     { title: "Profile", src: "user", path: `/profile/${user.id}` },
+    { title: "Logout", src: "logout", path: `/` },
   ];
 
   const handleNavigation = (path) => {
+    if (path==='/'){
+      localStorage.removeItem('jwt')
+      setIsLoggedIn(false)
+    }
     navigate(path);
     setOpen(false);
   };
@@ -47,7 +53,7 @@ const Sidebar = () => {
               !open && "scale-0"
             }`}
           >
-            StudentSync
+            DallaSync
           </h1>
         </div>
         <ul className="mt-20">
@@ -57,7 +63,7 @@ const Sidebar = () => {
               className="flex rounded-md p-2 cursor-pointer hover:bg-gray-800 hover:text-yellow-400 text-white text-sm items-center gap-x-4"
               onClick={() => handleNavigation(Menu.path)}
             >
-              <img src={`${Menu.src}.png`} alt={Menu.title} className="w-5 my-2" />
+              {Menu.src==='logout' ? <LogOut className="text-black"/> : <img src={`${Menu.src}.png`} alt={Menu.title} className="w-5 my-2" /> }
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 {Menu.title}
               </span>

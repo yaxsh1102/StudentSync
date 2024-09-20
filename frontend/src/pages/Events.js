@@ -7,14 +7,18 @@ import { Link } from "react-router-dom";
 import axios from 'axios'
 
 import { AppContext } from "../context/AppContext";
+import Loading from "../components/Loading";
 
 
 const Events = () => {
   const [eventsData,setEventsData] =useState({userEvents:[],upcoming:[],live:[],past:[]})
-  const {user,setRefresher} = useContext(AppContext) ;
+  const {user,setRefresher,loader,setLoader} = useContext(AppContext) ;
+
+ 
 
   useEffect(()=>{
     const getEvents = async ()=>{
+      setLoader(true)
       try {
         const res = await axios.post('http://localhost:8000/api/v1/events/',{'email':user.email})
         
@@ -27,14 +31,16 @@ const Events = () => {
             past:res.data.past
             
           })
+          setLoader(false)
         }
+        console.log("BEFORE CATCH")
       }
       catch(err){
         console.log("Some error hehe")
       }
     }
     getEvents()
-  },[setRefresher])
+  },[])
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -133,6 +139,7 @@ const Events = () => {
       console.log("New Event added:", newEvent);
 
       try{
+        setLoader(true)
         const res = await axios.post('http://localhost:8000/api/v1/createevent/', newEvent,
           {
             headers: {
@@ -148,6 +155,7 @@ const Events = () => {
             ...prevData,
             userEvents: [...prevData.userEvents, newEvent],
           }));  
+          setLoader(false)
           }else{
           console.log("Couldn't send data ")
         }
@@ -163,6 +171,10 @@ const Events = () => {
       alert("Please fill all fields and upload one photo.");
     }
   };
+
+  if (loader){
+    return(<Loading/>)
+  }
 
 
   return (

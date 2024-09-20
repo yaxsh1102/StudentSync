@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Loading from "../components/Loading";
+import { AppContext } from "../context/AppContext";
 
 const EventDetails = () => {
   const { param } = useParams();
   const [event,setEvent]=useState({})
+  const {loader,setLoader} = useContext(AppContext)
 
   useEffect(()=>{
-    console.log("Inside use effectttt")
     const getEventDetails =async ()=>{
+      setLoader(true)
     try{
       const res = await axios.post('http://localhost:8000/api/v1/geteventdetails/',{'id':param}) 
 
       if (res.data.status===200){
         setEvent(res.data.event)
+        setLoader(false)
       }
     }
     catch(err){
@@ -24,6 +28,9 @@ const EventDetails = () => {
   getEventDetails()
   },[param])
 
+  if (loader){
+    return(<Loading/>)
+  }
   return (
     <div className="flex flex-col h-full bg-gray-900 text-white">
       <div className="fixed top-0 left-0 right-0 z-10 bg-gray-800 ">

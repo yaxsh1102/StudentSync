@@ -568,9 +568,95 @@ class GetDormitoryDetailsView(APIView):
                 'message': 'Some Error Occured'
             })
             
+class CommunityView(APIView):
+
+    def post(self, request):
+        email=request.data.get('email')
+        userCreatedCommunities,allCommunities=[],[]
+        
+        try:
+            user = User.objects.get(email=email)
+            allUserCreatedCommunities = Community.objects.filter(creator=user)
             
+            for i in allUserCreatedCommunities:
+                ser = CommunitySerializer(i)
+                userCreatedCommunities+=ser.data, 
+                
+            allCommunities1= Community.objects.all()
+
+            for i in allCommunities1:
+                ser = CommunitySerializer(i)
+                
+                if ser.data not in userCreatedCommunities:
+                    allCommunities+=ser.data,
+                    
+            return Response({
+                'status':200,
+                'userCreatedCommunities':userCreatedCommunities,
+                'allCommunities':allCommunities,
+            })
+                    
+        except Exception as e:
+            print(e)
+            return Response({
+                'status':400,
+                'messages':"Some Error Occured in server while fetching community"
+            })
+
+class CreateCommunityView(APIView):
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
             
+            user = User.objects.get(email=email)
+            serializer = CommunitySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(creator=user) 
+                return Response({
+                    'status':200,
+                    'message':'Community Created Successfully',
+                })
+            else:
+                print(serializer.errors)
+                return Response({
+                    'status':400,
+                    'message':serializer.errors,
+                    })
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
+
+class DeleteCommunityView(APIView):
+    def post(self, request):
+        id = request.data.get('id')
             
+        try:
+            comm = Community.objects.get(id=id)
+            comm.delete()
+            
+            return Response({
+                'status':200,
+                'message':"Community Deleted"
+            })
+            
+        except Exception as e:
+            print(e)
+            return Response({
+                'status': 404,
+                'message': 'Some Error Occured'
+            })
+            
+class GetInTouchView(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        name = request.data.get('name')
+        message = request.data.get('message')
+    
+        
             
             
             
