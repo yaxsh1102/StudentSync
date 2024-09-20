@@ -55,7 +55,7 @@ const DormitoryPage = () => {
 
   const filterDormitories = (dormitories) =>
     dormitories.filter((dorm) =>
-      dorm.name.toLowerCase().includes(searchTerm.toLowerCase())
+      dorm.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleInputChange = (e) => {

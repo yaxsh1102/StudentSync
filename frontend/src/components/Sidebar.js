@@ -10,12 +10,12 @@ const Sidebar = () => {
 
 
   const Menus = [
-    { title: "Events", src: "calendar", path: "/events" },
-    { title: "Communities", src: "chat", path: "/communities" },
-    { title: "Dormitory", src: "home", path: "/dormitory" },
-    { title: "Flatmate", src: "magnifier", path: "/rooms" },
-    { title: "Profile", src: "user", path: `/profile/${user.id}` },
-    { title: "Logout", src: "logout", path: `/` },
+    { title: "Events", src: "calendar1", path: "/events" },
+    { title: "Communities", src: "icons8-chat-50", path: "/communities" },
+    { title: "Dormitory", src: "icons8-home-50", path: "/dormitory" },
+    { title: "Flatmate", src: "icons8-search-50", path: "/rooms" },
+    { title: "Profile", src: "icons8-user-30", path: `/profile/${user.id}` },
+    { title: "Logout", src: "icons8-logout-50", path: `/` },
   ];
 
   const handleNavigation = (path) => {
@@ -53,7 +53,7 @@ const Sidebar = () => {
               !open && "scale-0"
             }`}
           >
-            DallaSync
+            StudentSync
           </h1>
         </div>
         <ul className="mt-20">

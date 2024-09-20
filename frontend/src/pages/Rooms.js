@@ -46,7 +46,7 @@ const Rooms = () => {
 
   const filterRooms = (rooms) =>
     rooms.filter((room) =>
-      room.building_name.toLowerCase().includes(searchTerm.toLowerCase())
+      room.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleInputChange = (e) => {
