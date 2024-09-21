@@ -444,7 +444,7 @@ const Events = () => {
             ))
           ) : (
             <p className="text-gray-400 w-full text-lg text-center m-5">
-              You haven't added a room yet.
+              You haven't added a any event yet.
             </p>
           )}
           ;

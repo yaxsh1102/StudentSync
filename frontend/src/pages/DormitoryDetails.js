@@ -66,9 +66,7 @@ const DormitoryDetails = () => {
             <p className='text-base md:text-lg'>
               <span className='font-semibold text-yellow-400'>Capacity:</span> {dormitory.capacity}
             </p>
-            <p className='text-base md:text-lg'>
-              <span className='font-semibold text-yellow-400'>Price:</span> {dormitory.price}
-            </p>
+            
             <p className='mt-2 md:mt-4 text-gray-300'>{dormitory.description}</p>
           </div>
 
